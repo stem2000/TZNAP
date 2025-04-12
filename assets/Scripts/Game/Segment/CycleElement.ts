@@ -7,10 +7,10 @@
 
 import Segment from "./Segment";
 
-export default class CycledSegment{
+export default class CycleElement{
 
     private segment: Segment;
-    public next: CycledSegment;
+    public next: CycleElement;
 
 
     constructor(segment: Segment){

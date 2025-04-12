@@ -5,8 +5,9 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
-import Bridge from "./Bridge";
-import Limits from "./Limits";
+import Bridge from "../Bridge";
+import Limits from "../Limits";
+
 
 const {ccclass, property} = cc._decorator;
 
@@ -29,7 +30,7 @@ export default class Segment extends cc.Component {
     }
 
     public Rebuild() {
-        this.width = this.widthLimits.GetValueInLimits();
+        this.width = this.widthLimits.getValueInLimits();
 
         this.bridge.node.position = new cc.Vec3(this.GetRightEndX(), this.height, 0);
     }

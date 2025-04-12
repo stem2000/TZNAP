@@ -1,13 +1,30 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
+import ServiceManager from "./ServiceManager";
 
 const {ccclass, property} = cc._decorator;
+type Constructor<T = any> = new (...args: any[]) => T;
 
 @ccclass
-export default class ServiceLocator extends cc.Component {
-    public static instance: ServiceLocator;
+export class ServiceLocator extends cc.Component {
+    private static global: ServiceLocator | null = null;
+    private services = new ServiceManager();
+
+    static getGlobal(): ServiceLocator {
+        if (!this.global) {
+            this.global = new ServiceLocator();
+        }
+        return this.global;
+    }
+
+    public register<T>(ctor: Constructor<T>, service: T): this {
+        this.services.register(ctor, service);
+        return this;
+    }
+
+    public get<T>(ctor: Constructor<T>): T {
+        return this.services.get(ctor);
+    }
+
+    public tryGet<T>(ctor: Constructor<T>): T | null {
+        return this.services.tryGet(ctor);
+    }
 }
