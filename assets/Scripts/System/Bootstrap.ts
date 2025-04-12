@@ -11,7 +11,7 @@ import { ServiceLocator } from "./ServiceLocator";
 
 const {ccclass, property} = cc._decorator;
 
-@ccclass
+@ccclass()
 export default class Bootrstrap extends cc.Component {
     onLoad(): void {
         this.RegisterServices();

@@ -7,7 +7,7 @@
 
 const {ccclass, property} = cc._decorator;
 
-@ccclass
+@ccclass()
 export default class Bridge extends cc.Component {
     
 }

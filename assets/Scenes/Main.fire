@@ -271,7 +271,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "[0] TouchHandler",
+    "_name": "TouchHandler",
     "_objFlags": 0,
     "_parent": {
       "__id__": 4

@@ -19,6 +19,17 @@ export default class SegmentFactory implements IServiced{
         return cc.instantiate(this.segmentPrefab).getComponent(Segment);
     }
 
+    getSegments(count:number): Segment[] {
+        let segments : Segment[];
+        
+        segments = new Segment[count];
+        for(let i = 0; i < segments.length; i++){
+            segments[i] = this.getSegment();
+        }
+
+        return segments;
+    }
+
     _get_services_on_ctor(){
         let servloc = ServiceLocator.getGlobal();
         let prefabHolder = servloc.tryGet(PrefabStorage);

@@ -12,7 +12,7 @@ import Limits from "../Limits";
 const {ccclass, property} = cc._decorator;
 
 
-@ccclass
+@ccclass()
 export default class Segment extends cc.Component {
 
     @property(Limits)
