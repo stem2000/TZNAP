@@ -1,5 +1,6 @@
 import CameraBox from "../../Game/CameraBox";
-import CameraMover from "../../Game/CameraMover";
+import LevelBuilder from "../../Game/LevelBuilder";
+import LevelLoader from "../../Game/LevelLoader";
 import SegmentScroller from "../../Game/Segment/SegmentScroller";
 import PrefabStorage from "../PrefabStorage";
 import { ServiceLocator } from "../ServiceLocator";
@@ -22,8 +23,11 @@ export default class BasicRegistrationStrategy extends ServiceRegistrationStrate
     @property(TouchHandler)
     touchHandler: TouchHandler = null;
 
-    @property(CameraMover)
-    cameraMover: CameraMover = null;
+    @property(LevelBuilder)
+    levelBuilder: LevelBuilder = null;
+
+    @property(LevelLoader)
+    levelLoader: LevelLoader = null;
 
     public override RegisterAll() {
         let servloc = ServiceLocator.getGlobal();
@@ -32,6 +36,18 @@ export default class BasicRegistrationStrategy extends ServiceRegistrationStrate
         servloc.register(PrefabStorage, this.prefabStorage);
         servloc.register(SegmentScroller, this.segmentScroller);
         servloc.register(TouchHandler, this.touchHandler);
-        servloc.register(CameraMover, this.cameraMover);
+        servloc.register(LevelBuilder, this.levelBuilder);
+        servloc.register(LevelLoader, this.levelLoader);
+
+        this.linkAll();
+    }
+
+    private linkAll(){
+        this.levelBuilder._linkService();
+        this.levelLoader._linkService();
+        this.segmentScroller._linkService();
+        this.cameraBox._linkService();
+        this.prefabStorage._linkService();
+        this.touchHandler._linkService();
     }
 }

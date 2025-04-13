@@ -1,7 +1,7 @@
 import ServiceManager from "./ServiceManager";
 
 const {ccclass, property} = cc._decorator;
-type Constructor<T = any> = new (...args: any[]) => T;
+export type Constructor<T = any> = new (...args: any[]) => T;
 
 @ccclass
 export class ServiceLocator extends cc.Component {
@@ -26,5 +26,5 @@ export class ServiceLocator extends cc.Component {
 
     public tryGet<T>(ctor: Constructor<T>): T | null {
         return this.services.tryGet(ctor);
-    }
+    }    
 }

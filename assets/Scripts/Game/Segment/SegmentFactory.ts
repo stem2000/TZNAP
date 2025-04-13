@@ -10,8 +10,10 @@ export default class SegmentFactory {
     segmentPrefab: cc.Prefab;
     segmentCount: number = 3;
 
-    constructor(segmentPrefab: cc.Prefab) {
-        this.segmentPrefab = segmentPrefab;
+    constructor() {
+        let servloc = ServiceLocator.getGlobal();
+
+        this.segmentPrefab = servloc.get(PrefabStorage).getPrefab("Segment");
     }
 
     createSegment(){

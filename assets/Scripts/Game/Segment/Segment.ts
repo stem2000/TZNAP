@@ -15,10 +15,10 @@ export default class Segment extends cc.Component {
     private view: SegmentView = null;
 
     @property(cc.Float)
-    private height_: number = 300;
+    private height_: number = 6;
 
     @property(cc.Float)
-    private width_: number = 100;
+    private width_: number = 4;
 
 
     public get width(): number{
@@ -36,8 +36,7 @@ export default class Segment extends cc.Component {
         this.view.rebuild(this.width_, this.height_);
     }
 
-    public Rebuild(position: cc.Vec3) {
-        this.node.position = position;
+    public Rebuild() {
         this.width_ = this.widthLimits.getValueInLimits();
 
         this.view.rebuild(this.width_, this.height_);
