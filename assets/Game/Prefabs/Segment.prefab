@@ -100,9 +100,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 192,
-      "g": 71,
-      "b": 71,
+      "r": 79,
+      "g": 104,
+      "b": 202,
       "a": 255
     },
     "_contentSize": {
@@ -112,7 +112,7 @@
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0
     },
     "_trs": {
@@ -214,14 +214,14 @@
     "view": {
       "__id__": 4
     },
-    "height": 100,
-    "width": 100,
+    "height_": 6,
+    "width_": 4,
     "_id": ""
   },
   {
     "__type__": "Limits",
-    "min": 50,
-    "max": 200
+    "min": 1,
+    "max": 6
   },
   {
     "__type__": "cc.PrefabInfo",

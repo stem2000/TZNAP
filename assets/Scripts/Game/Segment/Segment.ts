@@ -15,30 +15,39 @@ export default class Segment extends cc.Component {
     private view: SegmentView = null;
 
     @property(cc.Float)
-    private height: number = 300;
+    private height_: number = 300;
 
     @property(cc.Float)
-    private width: number = 100;
+    private width_: number = 100;
+
+
+    public get width(): number{
+        return this.width_;
+    }
+
+    public get height(): number{
+        return this.height_;
+    }
 
 
     public Build(position: cc.Vec3){
         this.node.position = position;
 
-        this.view.rebuild(this.width, this.height);
+        this.view.rebuild(this.width_, this.height_);
     }
 
     public Rebuild(position: cc.Vec3) {
         this.node.position = position;
-        this.width = this.widthLimits.getValueInLimits();
+        this.width_ = this.widthLimits.getValueInLimits();
 
-        this.view.rebuild(this.width, this.height);
+        this.view.rebuild(this.width_, this.height_);
     }
 
     public GetLeftEnd(): cc.Vec2{
         let leftEnd = new cc.Vec2();
 
-        leftEnd.x = this.node.position.x - this.width / 2;
-        leftEnd.y = this.height;
+        leftEnd.x = this.node.position.x - this.width_ / 2;
+        leftEnd.y = this.height_;
 
         return leftEnd;
     }
@@ -46,8 +55,8 @@ export default class Segment extends cc.Component {
     public GetRightEnd(){
         let rightEnd = new cc.Vec2();
 
-        rightEnd.x = this.node.position.x + this.width / 2;
-        rightEnd.y = this.height;
+        rightEnd.x = this.node.position.x + this.width_ / 2;
+        rightEnd.y = this.height_;
 
         return rightEnd;
     }

@@ -1,4 +1,5 @@
 import CameraBox from "../../Game/CameraBox";
+import CameraMover from "../../Game/CameraMover";
 import SegmentScroller from "../../Game/Segment/SegmentScroller";
 import PrefabStorage from "../PrefabStorage";
 import { ServiceLocator } from "../ServiceLocator";
@@ -21,6 +22,9 @@ export default class BasicRegistrationStrategy extends ServiceRegistrationStrate
     @property(TouchHandler)
     touchHandler: TouchHandler = null;
 
+    @property(CameraMover)
+    cameraMover: CameraMover = null;
+
     public override RegisterAll() {
         let servloc = ServiceLocator.getGlobal();
 
@@ -28,5 +32,6 @@ export default class BasicRegistrationStrategy extends ServiceRegistrationStrate
         servloc.register(PrefabStorage, this.prefabStorage);
         servloc.register(SegmentScroller, this.segmentScroller);
         servloc.register(TouchHandler, this.touchHandler);
+        servloc.register(CameraMover, this.cameraMover);
     }
 }

@@ -6,7 +6,7 @@ const {ccclass, property} = cc._decorator;
 export default class PrefabStorage extends cc.Component {
 
     @property([PrefabContainer])
-    containers: PrefabContainer[] = [];
+    private containers: PrefabContainer[] = [];
 
     private prefabMap: Map<string, cc.Prefab> = new Map();
 
