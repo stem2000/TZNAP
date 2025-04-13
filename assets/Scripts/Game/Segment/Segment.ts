@@ -1,12 +1,5 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
-
-import Bridge from "../Bridge";
-import Limits from "../Limits";
+import Limits from "./Limits";
+import SegmentView from "./SegmentView";
 
 
 const {ccclass, property} = cc._decorator;
@@ -18,32 +11,44 @@ export default class Segment extends cc.Component {
     @property(Limits)
     private widthLimits: Limits = null;
 
+    @property(SegmentView)
+    private view: SegmentView = null;
+
     @property(cc.Float)
-    private height: number = 5;
+    private height: number = 300;
 
-    private width: number;
+    @property(cc.Float)
+    private width: number = 100;
 
-    private bridge: Bridge;
 
-    onLoad(){
+    public Build(position: cc.Vec3){
+        this.node.position = position;
 
+        this.view.rebuild(this.width, this.height);
     }
 
-    public Rebuild() {
+    public Rebuild(position: cc.Vec3) {
+        this.node.position = position;
         this.width = this.widthLimits.getValueInLimits();
 
-        this.bridge.node.position = new cc.Vec3(this.GetRightEndX(), this.height, 0);
+        this.view.rebuild(this.width, this.height);
     }
 
-    public GetLeftEndX(){
-        return this.node.position.x - this.width / 2;
+    public GetLeftEnd(): cc.Vec2{
+        let leftEnd = new cc.Vec2();
+
+        leftEnd.x = this.node.position.x - this.width / 2;
+        leftEnd.y = this.height;
+
+        return leftEnd;
     }
 
-    public GetRightEndX(){
-        return this.node.position.x + this.width / 2;
-    }
+    public GetRightEnd(){
+        let rightEnd = new cc.Vec2();
 
-    public GetBridge(): Bridge{
-        return this.bridge;
+        rightEnd.x = this.node.position.x + this.width / 2;
+        rightEnd.y = this.height;
+
+        return rightEnd;
     }
 }

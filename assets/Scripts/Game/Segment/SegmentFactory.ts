@@ -1,4 +1,3 @@
-import { IServiced } from "../../Interfaces/Interfaces";
 import PrefabStorage from "../../System/PrefabStorage";
 import { ServiceLocator } from "../../System/ServiceLocator";
 import Segment from "./Segment";
@@ -6,34 +5,27 @@ import Segment from "./Segment";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class SegmentFactory implements IServiced{
+export default class SegmentFactory {
 
     segmentPrefab: cc.Prefab;
     segmentCount: number = 3;
 
-    constructor() {
-        this._get_services_on_ctor();
+    constructor(segmentPrefab: cc.Prefab) {
+        this.segmentPrefab = segmentPrefab;
     }
 
-    getSegment(){
+    createSegment(){
         return cc.instantiate(this.segmentPrefab).getComponent(Segment);
     }
 
-    getSegments(count:number): Segment[] {
-        let segments : Segment[];
+    createSegments(count:number): Segment[] {
+        console.log(count);
+        let segments : Segment[] = [];
         
-        segments = new Segment[count];
-        for(let i = 0; i < segments.length; i++){
-            segments[i] = this.getSegment();
+        for(let i = 0; i < count; i++){
+            segments.push(this.createSegment());
         }
 
         return segments;
-    }
-
-    _get_services_on_ctor(){
-        let servloc = ServiceLocator.getGlobal();
-        let prefabHolder = servloc.tryGet(PrefabStorage);
-
-        this.segmentPrefab = prefabHolder.getPrefab('Segment');
     }
 }

@@ -1,15 +1,26 @@
+import { ServiceLocator } from "../../System/ServiceLocator";
+import CameraBox from "../CameraBox";
+import Segment from "./Segment";
 import SegmentCycler from "./SegmentCycle";
-import SegmentFactory from "./SegmentFactory";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class SegmentScroller extends cc.Component {
+export default class SegmentScroller extends cc.Component{
     segmentCycler : SegmentCycler;
-    // onLoad () {}
+    cameraBox: CameraBox;
 
-    start () {
-        this.segmentCycler = new SegmentCycler(new SegmentFactory().getSegments(3));
+    public initialize(segments: Segment[]){
+        segments.forEach(element => {
+            this.node.addChild(element.node);
+        });
+
+        this.segmentCycler = new SegmentCycler(segments);
     }
-    // update (dt) {}
+
+    public scroll(){
+
+    }
+
+
 }
