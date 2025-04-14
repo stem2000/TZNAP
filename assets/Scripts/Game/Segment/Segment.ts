@@ -36,10 +36,15 @@ export default class Segment extends cc.Component {
         this.view.rebuild(this.width_, this.height_);
     }
 
-    public Rebuild() {
+    public BuildRandom():Segment {
         this.width_ = this.widthLimits.getValueInLimits();
 
         this.view.rebuild(this.width_, this.height_);
+        return this;
+    }
+
+    public Move(position: cc.Vec3){
+        this.node.position = position;
     }
 
     public GetLeftEnd(): cc.Vec2{

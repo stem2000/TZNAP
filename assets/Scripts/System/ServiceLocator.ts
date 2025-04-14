@@ -5,6 +5,9 @@ export type Constructor<T = any> = new (...args: any[]) => T;
 
 @ccclass
 export class ServiceLocator extends cc.Component {
+    linkAll() {
+        throw new Error("Method not implemented.");
+    }
     private static global: ServiceLocator | null = null;
     private services = new ServiceManager();
 

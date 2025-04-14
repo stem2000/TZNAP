@@ -21,7 +21,6 @@ export default class SegmentFactory {
     }
 
     createSegments(count:number): Segment[] {
-        console.log(count);
         let segments : Segment[] = [];
         
         for(let i = 0; i < count; i++){

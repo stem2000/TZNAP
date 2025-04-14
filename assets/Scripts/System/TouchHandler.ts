@@ -1,4 +1,4 @@
-import SegmentScroller from "../Game/Segment/SegmentScroller";
+import SegmentMover from "../Game/Segment/SegmentMover";
 import { IService } from "../Interfaces/Interfaces";
 import { ServiceLocator } from "./ServiceLocator";
 
@@ -7,7 +7,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class TouchHandler extends cc.Component implements IService {
 
-    private segmentScroller: SegmentScroller;
+    private segmentMover: SegmentMover;
 
     onLoad () {
         let servloc = ServiceLocator.getGlobal();
@@ -15,7 +15,7 @@ export default class TouchHandler extends cc.Component implements IService {
         this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
 
-        this.segmentScroller = servloc.get(SegmentScroller);
+        this.segmentMover = servloc.get(SegmentMover);
     }
 
     onTouchStart (event) {
@@ -25,7 +25,7 @@ export default class TouchHandler extends cc.Component implements IService {
     onTouchEnd (event) {
         let screenPos = event.getLocation();
 
-        this.segmentScroller.scroll();
+        this.segmentMover.move();
     }
 
     onDestroy () {
