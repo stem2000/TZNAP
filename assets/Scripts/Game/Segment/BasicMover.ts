@@ -8,24 +8,24 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class BasicMover extends SegmentMover implements IService{
-    private left: Segment;
-    private mid: Segment;
-    private right: Segment;
+    private playerSeg: Segment;
+    private targetSeg: Segment;
+    private offScreenSeg: Segment;
     private cameraBox: CameraBox;
 
 
     public override initialize(segments: Segment[]){        
-        this.left = segments[0];
-        this.mid = segments[1];
-        this.right = segments[2];
+        this.playerSeg = segments[0];
+        this.targetSeg = segments[1];
+        this.offScreenSeg = segments[2];
     }
 
     public override getPlayerSegment(): Segment {
-        return this.left;
+        return this.playerSeg;
     }
 
-    public override getPlayerNextSegment(): Segment {
-        return this.mid;
+    public override getTargetSegment(): Segment {
+        return this.targetSeg;
     }
 
     public override _linkService(): void {
@@ -35,54 +35,43 @@ export default class BasicMover extends SegmentMover implements IService{
     }
 
     public override move() {
-        this.moveLeft();
-        this.moveMid();
-        this.moveRight();
+        this.moveAway(this.playerSeg);
+        this.moveToLeftCorner(this.targetSeg);
+        this.moveToRandomPoint(this.offScreenSeg);
 
         this.swap();
     }
 
-    private moveLeft(){
-        this.left.Move(
-            new cc.Vec3(
-                this.cameraBox.left - this.left.width,
-                this.mid.node.position.y,
-                this.mid.node.position.z
-                )
-        );
+    private moveAway(segment: Segment){
+        let x = this.cameraBox.left - this.playerSeg.width;
+        let y = segment.node.position.y;
+        let z = segment.node.position.z;
+
+        segment.Move(new cc.Vec3(x,y,z));
     }
 
-    private moveMid(){
-        this.mid.Move( 
-            new cc.Vec3(
-                this.cameraBox.left,
-                this.mid.node.position.y,
-                this.mid.node.position.z
-            )
-        );
+    private moveToLeftCorner(segment: Segment){
+        let x = this.cameraBox.left;
+        let y = segment.node.position.y;
+        let z = segment.node.position.z;
+
+        segment.Move(new cc.Vec3(x, y, z));
     }
 
-    private moveRight(){
-        this.right.BuildRandom();
-        this.right.Move(
-            new cc.Vec3(
-                Math.randomInRange(
-                    this.mid.GetRightEnd().x + 2, 
-                    this.cameraBox.right - this.right.width
-                ),
-                this.right.node.position.y,
-                this.right.node.position.z
-            )
-        )
+    private moveToRandomPoint(segment: Segment){
+        let x = Math.randomInRange( this.targetSeg.GetRightEnd().x + 2, this.cameraBox.right - this.offScreenSeg.width);
+        let y = segment.node.position.y;
+        let z = segment.node.position.z;
+
+        this.offScreenSeg.BuildRandom();
+        this.offScreenSeg.Move(new cc.Vec3(x, y, z));
     }
 
     private swap(){
-        let left = this.left;
-        let mid = this.mid;
-        let right = this.right;
+        let playerSeg = this.playerSeg;
 
-        this.left = mid;
-        this.mid = right;
-        this.right = left;
+        this.playerSeg = this.targetSeg;
+        this.targetSeg = this.offScreenSeg;
+        this.offScreenSeg = playerSeg;
     }
 }
