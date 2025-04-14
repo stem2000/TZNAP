@@ -30,24 +30,29 @@ export default class Segment extends cc.Component {
     }
 
 
-    public Build(position: cc.Vec3){
-        this.node.position = position;
-
+    public build(): Segment{
         this.view.rebuild(this.width_, this.height_);
+
+        return this;
     }
 
-    public BuildRandom():Segment {
+    public rebuild():Segment {
         this.width_ = this.widthLimits.getValueInLimits();
 
         this.view.rebuild(this.width_, this.height_);
         return this;
     }
 
-    public Move(position: cc.Vec3){
+    public moveQuick(position: cc.Vec3){
         this.node.position = position;
     }
 
-    public GetLeftEnd(): cc.Vec2{
+    public getTweenTo(point: cc.Vec3): cc.Tween<cc.Node>{
+        return cc.tween(this.node).to(0.2, {position: point});
+    }
+
+
+    public getLeftEnd(): cc.Vec2{
         let leftEnd = new cc.Vec2();
 
         leftEnd.x = this.node.position.x - this.width_ / 2;
@@ -56,7 +61,7 @@ export default class Segment extends cc.Component {
         return leftEnd;
     }
 
-    public GetRightEnd(){
+    public getRightEnd(){
         let rightEnd = new cc.Vec2();
 
         rightEnd.x = this.node.position.x + this.width_ / 2;

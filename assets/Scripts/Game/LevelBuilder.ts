@@ -14,33 +14,29 @@ export default class LevelBuilder extends cc.Component implements IService{
 
 
     buildOneSegmentedLevel(){
-        console.log("build");
-        let segments = this.createSegments(3);
-
-        segments[1].Build(
-            new cc.Vec3(
-                -segments[1].width / 2, 
-                this.cameraBox.bot,
-                segments[1].node.position.z
-                )   
-            );
-
-        this.segmentMover.initialize(segments);
+        this.createSegments();
     }
 
     buildTwoSegmentedLevel(){
 
     }
 
-    createSegments(count: number) : Segment[]{
-        let segments = new SegmentFactory().createSegments(count);
+    createSegments(){
+        let segments = new SegmentFactory().createSegments(2);
 
-        segments.forEach(segment => {
-            segment.Build(new cc.Vec3(this.cameraBox.right, this.cameraBox.bot, 0));
-            this.segmentMover.node.addChild(segment.node);
+        let scene = cc.director.getScene();
+
+        scene.addChild(segments[0].node);
+        scene.addChild(segments[1].node);
+
+        segments.forEach((segment) => {
+            segment.build();
         });
 
-        return segments;
+        segments[0].moveQuick(new cc.Vec3(-segments[0].width / 2, this.cameraBox.bot, 0));
+        segments[1].moveQuick(new cc.Vec3(this.cameraBox.right, this.cameraBox.bot, 0));
+
+        this.segmentMover.initialize(segments);
     }
 
 

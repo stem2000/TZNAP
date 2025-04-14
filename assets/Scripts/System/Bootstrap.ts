@@ -1,21 +1,17 @@
 import LevelLoader from "../Game/LevelLoader";
 import PrefabStorage from "./PrefabStorage";
 import { ServiceLocator } from "./ServiceLocator";
-import ServiceRegistration from "./ServiceRegistrations/ServiceRegistration";
+import BootstrapStrategy from "./ServiceRegistrations/BootstrapStrategy";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass()
 export default class Bootrstrap extends cc.Component {
-    @property(ServiceRegistration)
-    serviceRegistrationStrategy: ServiceRegistration = null;
-
-    @property(PrefabStorage)
-    prefabStorage: PrefabStorage = null;
+    @property(BootstrapStrategy)
+    bootstrapStrategy: BootstrapStrategy = null;
 
     onLoad(): void {
-        this.prefabStorage.initialize();
-        this.serviceRegistrationStrategy.RegisterAll();
+        this.bootstrapStrategy.Boot();
         
         cc.debug.setDisplayStats(true);
     }

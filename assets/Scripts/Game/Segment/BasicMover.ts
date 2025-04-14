@@ -8,24 +8,31 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class BasicMover extends SegmentMover implements IService{
-    private playerSeg: Segment;
-    private targetSeg: Segment;
-    private offScreenSeg: Segment;
+    private segments : Segment[];
     private cameraBox: CameraBox;
 
+    get RightPoint(): cc.Vec3{
+        let x = this.cameraBox.right;
+
+        return new cc.Vec3(x, this.cameraBox.bot, 0);
+    }
+
+    get leftPoint(): cc.Vec3{
+        let x = this.cameraBox.left;
+
+        return new cc.Vec3(x, this.cameraBox.bot, 0);
+    }
+
+    get randomPoint(): cc.Vec3{
+        let x = Math.randomInRange(
+            this.segments[0].getRightEnd().x + this.segments[0].width / 2, 
+            this.cameraBox.right - this.segments[1].width);
+
+        return new cc.Vec3(x, this.cameraBox.bot, 0);
+    }
 
     public override initialize(segments: Segment[]){        
-        this.playerSeg = segments[0];
-        this.targetSeg = segments[1];
-        this.offScreenSeg = segments[2];
-    }
-
-    public override getPlayerSegment(): Segment {
-        return this.playerSeg;
-    }
-
-    public override getTargetSegment(): Segment {
-        return this.targetSeg;
+        this.segments = segments;
     }
 
     public override _linkService(): void {
@@ -35,43 +42,20 @@ export default class BasicMover extends SegmentMover implements IService{
     }
 
     public override move() {
-        this.moveAway(this.playerSeg);
-        this.moveToLeftCorner(this.targetSeg);
-        this.moveToRandomPoint(this.offScreenSeg);
+        let tweenToLeft = this.segments[0].getTweenTo(this.leftPoint);
+        let tweenToRandom = this.segments[1].rebuild().getTweenTo(this.randomPoint);
 
-        this.swap();
-    }
-
-    private moveAway(segment: Segment){
-        let x = this.cameraBox.left - this.playerSeg.width;
-        let y = segment.node.position.y;
-        let z = segment.node.position.z;
-
-        segment.Move(new cc.Vec3(x,y,z));
-    }
-
-    private moveToLeftCorner(segment: Segment){
-        let x = this.cameraBox.left;
-        let y = segment.node.position.y;
-        let z = segment.node.position.z;
-
-        segment.Move(new cc.Vec3(x, y, z));
-    }
-
-    private moveToRandomPoint(segment: Segment){
-        let x = Math.randomInRange( this.targetSeg.GetRightEnd().x + 2, this.cameraBox.right - this.offScreenSeg.width);
-        let y = segment.node.position.y;
-        let z = segment.node.position.z;
-
-        this.offScreenSeg.BuildRandom();
-        this.offScreenSeg.Move(new cc.Vec3(x, y, z));
+        tweenToLeft.call(()=>
+            tweenToRandom.start()
+        ).start();
     }
 
     private swap(){
-        let playerSeg = this.playerSeg;
+        let temp = this.segments[0];
 
-        this.playerSeg = this.targetSeg;
-        this.targetSeg = this.offScreenSeg;
-        this.offScreenSeg = playerSeg;
+        this.segments[0].moveQuick(this.RightPoint);
+
+        this.segments[0] = this.segments[1];
+        this.segments[1] = this.segments[0];
     }
 }

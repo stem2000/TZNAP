@@ -1,14 +1,14 @@
-import { IPredicate, IState, ITransition } from "../../Interfaces/Interfaces";
-import { StateNode } from "./StateNode";
-import { Transition } from "./Transition";
+import { gPredicate } from "./gPredicate";
+import { gState } from "./gState";
+import { gTransition } from "./gTransition";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export class StateMachine {
-    private current: StateNode | null = null;
-    private nodes: Map<Function, StateNode> = new Map();
-    private anyTransitions: Set<ITransition> = new Set();
+    private current: gState | null = null;
+    private states: Map<Function, gState> = new Map();
+    private anyTransitions: Set<gTransition> = new Set();
 
     update() {
         const transition = this.getTransition();
@@ -19,33 +19,29 @@ export class StateMachine {
         this.current?.state.update();
     }
 
-    fixedUpdate() {
-        this.current?.state.fixedUpdate();
-    }
-
-    setState(state: IState) {
-        const node = this.nodes.get(state.constructor);
-        if (!node) {
+    setState(state: gState) {
+        const temp = this.states.get(state.constructor);
+        if (!temp) {
             throw new Error(`State not found: ${state.constructor.name}`);
         }
-        this.current = node;
+        this.current = temp;
         this.current.state.onEnter();
     }
 
-    private changeState(state: IState) {
+    private changeState(state: gState) {
         if (this.current?.state === state) return;
 
-        const nextNode = this.nodes.get(state.constructor);
-        if (!nextNode) {
+        const nextState = this.states.get(state.constructor);
+        if (!nextState) {
             throw new Error(`Next state not found: ${state.constructor.name}`);
         }
 
         this.current?.state.onExit();
-        nextNode.state.onEnter();
-        this.current = nextNode;
+        nextState.state.onEnter();
+        this.current = nextState;
     }
 
-    private getTransition(): ITransition | null {
+    private getTransition(): gTransition | null {
         const anyTransitions = Array.from(this.anyTransitions);
 
         for (const transition of anyTransitions) {
@@ -55,7 +51,7 @@ export class StateMachine {
 
         
         if (this.current) {
-            const currentTransitions = Array.from(this.anyTransitions);
+            const currentTransitions = Array.from(this.current.transitions);
 
             for (const transition of currentTransitions) {
                 if (transition.condition.evaluate()) return transition;
@@ -65,22 +61,22 @@ export class StateMachine {
         return null;
     }
 
-    addTransition(from: IState, to: IState, condition: IPredicate) {
-        const fromNode = this.getOrAddNode(from);
-        const toNode = this.getOrAddNode(to);
-        fromNode.addTransition(toNode.state, condition);
+    addTransition(from: gState, to: gState, condition: gPredicate) {
+        const fromState = this.getOrAddState(from);
+        const toState = this.getOrAddState(to);
+        fromState.addTransition(toState.state, condition);
     }
 
-    addAnyTransition(to: IState, condition: IPredicate) {
-        const toNode = this.getOrAddNode(to);
-        this.anyTransitions.add(new Transition(toNode.state, condition));
+    addAnyTransition(to: gState, condition: gPredicate) {
+        const toState = this.getOrAddState(to);
+        this.anyTransitions.add(new gTransition(toState.state, condition));
     }
 
-    private getOrAddNode(state: IState): StateNode {
+    private getOrAddState(state: gState): gState {
         const ctor = state.constructor;
-        if (!this.nodes.has(ctor)) {
-            this.nodes.set(ctor, new StateNode(state));
+        if (!this.states.has(ctor)) {
+            this.states.set(ctor, new gState());
         }
-        return this.nodes.get(ctor)!;
+        return this.states.get(ctor)!;
     }
 }
