@@ -1,4 +1,4 @@
-import { IService } from "../../Interfaces/Interfaces";
+import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
 import { ServiceLocator } from "../../System/ServiceLocator";
 import CameraBox from "../CameraBox";
 import Segment from "./Segment";
@@ -7,23 +7,24 @@ import SegmentMover from "./SegmentMover";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class BasicMover extends SegmentMover implements IService{
+export default class BasicMover extends SegmentMover implements IInjectable, IBootable{
     private segments : Segment[];
     private cameraBox: CameraBox;
 
-    get RightPoint(): cc.Vec3{
+
+    private get RightPoint(): cc.Vec3{
         let x = this.cameraBox.right;
 
         return new cc.Vec3(x, this.cameraBox.bot, 0);
     }
 
-    get leftPoint(): cc.Vec3{
+    private get leftPoint(): cc.Vec3{
         let x = this.cameraBox.left;
 
         return new cc.Vec3(x, this.cameraBox.bot, 0);
     }
 
-    get randomPoint(): cc.Vec3{
+    private get randomPoint(): cc.Vec3{
         let x = Math.randomInRange(
             this.segments[0].getRightEnd().x + this.segments[0].width / 2, 
             this.cameraBox.right - this.segments[1].width);
@@ -31,14 +32,21 @@ export default class BasicMover extends SegmentMover implements IService{
         return new cc.Vec3(x, this.cameraBox.bot, 0);
     }
 
-    public override initialize(segments: Segment[]){        
-        this.segments = segments;
-    }
 
-    public override _linkService(): void {
+
+    public override _inject(): void {
         let servloc = ServiceLocator.getGlobal();
 
         this.cameraBox = servloc.get(CameraBox);
+    }
+
+    public override _init(): void{
+        
+    }
+
+
+    public override addSegments(segments: Segment[]){        
+        this.segments = segments;
     }
 
     public override move() {

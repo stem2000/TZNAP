@@ -1,21 +1,29 @@
 import SegmentMover from "../Game/Segment/SegmentMover";
-import { IService } from "../Interfaces/Interfaces";
+import { IBootable, IInjectable } from "../Interfaces/Interfaces";
 import { ServiceLocator } from "./ServiceLocator";
+import { StateMachine } from "./StateMachine/StateMachine";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class TouchHandler extends cc.Component implements IService {
+export default class InputHandler extends cc.Component implements IInjectable, IBootable {
 
     private segmentMover: SegmentMover;
+    private stateMachine : StateMachine = new StateMachine();;
 
-    onLoad () {
+    _inject(): void {
         let servloc = ServiceLocator.getGlobal();
 
+        this.segmentMover = servloc.get(SegmentMover);
+    }
+
+    _init(): void {
         this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
+    }
 
-        this.segmentMover = servloc.get(SegmentMover);
+    update(){
+        this.stateMachine.update();
     }
 
     onTouchStart (event) {
@@ -25,6 +33,7 @@ export default class TouchHandler extends cc.Component implements IService {
     onTouchEnd (event) {
         let screenPos = event.getLocation();
 
+        //temporary
         this.segmentMover.move();
     }
 
@@ -32,6 +41,4 @@ export default class TouchHandler extends cc.Component implements IService {
         this.node.off(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.off(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
     }
-
-    _linkService(): void {}
 }

@@ -1,3 +1,7 @@
-export interface IService{
-    _linkService(): void;
+export interface IInjectable{
+    _inject(): void;
+}
+
+export interface IBootable{
+    _init(): void;
 }

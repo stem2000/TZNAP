@@ -7,7 +7,7 @@ import Player from "../../Game/Player/Player";
 import SegmentMover from "../../Game/Segment/SegmentMover";
 import PrefabStorage from "../PrefabStorage";
 import { ServiceLocator } from "../ServiceLocator";
-import TouchHandler from "../TouchHandler";
+import InputHandler from "../InputHandler";
 import BootstrapStrategy from "./BootstrapStrategy";
 
 const {ccclass, property} = cc._decorator;
@@ -23,8 +23,8 @@ export default class BasicBootstrap extends BootstrapStrategy {
     @property(SegmentMover)
     segmentMover: SegmentMover = null;
 
-    @property(TouchHandler)
-    touchHandler: TouchHandler = null;
+    @property(InputHandler)
+    inputHandler: InputHandler = null;
 
     @property(LevelBuilder)
     levelBuilder: LevelBuilder = null;
@@ -39,32 +39,52 @@ export default class BasicBootstrap extends BootstrapStrategy {
     gameFlow: GameFlow = null;
 
     public override Boot() {
-        let servloc = ServiceLocator.getGlobal();
+        this.registerServices();
+        this.injectServices();
+        this.initBootables();
         
-        this.prefabStorage.initialize();
-
-        servloc.register(CameraBox, this.cameraBox);
-        servloc.register(PrefabStorage, this.prefabStorage);
-        servloc.register(SegmentMover, this.segmentMover);
-        servloc.register(TouchHandler, this.touchHandler);
-        servloc.register(LevelBuilder, this.levelBuilder);
-        servloc.register(LevelLoader, this.levelLoader);
-        servloc.register(Player, this.player);
-        servloc.register(GameFlow, this.gameFlow);
-
-        this.linkAll();
+        this.configureCC();
 
         cc.systemEvent.emit(GlobalEvent.BootstrapEnded);
     }
 
-    private linkAll(){
-        this.levelBuilder._linkService();
-        this.levelLoader._linkService();
-        this.segmentMover._linkService();
-        this.cameraBox._linkService();
-        this.prefabStorage._linkService();
-        this.touchHandler._linkService();
-        this.player._linkService();
-        this.gameFlow._linkService();
+    private registerServices(){
+        let servloc = ServiceLocator.getGlobal();
+
+        servloc.register(CameraBox, this.cameraBox);
+        servloc.register(PrefabStorage, this.prefabStorage);
+        servloc.register(SegmentMover, this.segmentMover);
+        servloc.register(InputHandler, this.inputHandler);
+        servloc.register(LevelBuilder, this.levelBuilder);
+        servloc.register(LevelLoader, this.levelLoader);
+        servloc.register(Player, this.player);
+        servloc.register(GameFlow, this.gameFlow);
+    }
+
+    private injectServices(){
+        this.levelBuilder._inject();
+        this.levelLoader._inject();
+        this.segmentMover._inject();
+        this.cameraBox._inject();
+        this.prefabStorage._inject();
+        this.inputHandler._inject();
+        this.player._inject();
+        this.gameFlow._inject();
+    }
+
+    private initBootables(){
+        this.levelBuilder._init();
+        this.levelLoader._init();
+        this.segmentMover._init();
+        this.cameraBox._init();
+        this.prefabStorage._init();
+        this.inputHandler._init();
+        this.player._init();
+        this.gameFlow._init();
+    }
+
+
+    private configureCC(){       
+        cc.debug.setDisplayStats(true);
     }
 }

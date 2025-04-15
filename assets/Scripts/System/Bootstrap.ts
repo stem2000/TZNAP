@@ -12,13 +12,5 @@ export default class Bootrstrap extends cc.Component {
 
     onLoad(): void {
         this.bootstrapStrategy.Boot();
-        
-        cc.debug.setDisplayStats(true);
-    }
-
-    start(){
-        let levelLoader = ServiceLocator.getGlobal().get(LevelLoader);
-
-        levelLoader.loadOneSegmentedLevel();
     }
 }

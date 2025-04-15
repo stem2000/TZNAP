@@ -1,4 +1,4 @@
-import { IService } from "../../Interfaces/Interfaces";
+import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
 import EliminationQueue from "../../System/DataStructures/EliminationQueue";
 import { ServiceLocator } from "../../System/ServiceLocator";
 import CameraBox from "../CameraBox";
@@ -8,11 +8,17 @@ import SegmentFactory from "./SegmentFactory";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class SegmentMover extends cc.Component implements IService{
-    public initialize(segments: Segment[]){}
-    public getPlayerSegment(): Segment {return undefined;};
-    public getTargetSegment(): Segment {return undefined;};
+export default class SegmentMover extends cc.Component implements IInjectable, IBootable{
+    public _init(): void {}
+    public _inject(): void {}
+
+    public addSegments(segments: Segment[]){}
+
+    public getNext(): Segment {
+        cc.log("Should override super.getNext() on " + this);    
+        return undefined;
+    };
+
     public move(){};
 
-    public _linkService(): void {}
 }

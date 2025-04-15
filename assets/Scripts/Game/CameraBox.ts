@@ -1,12 +1,18 @@
-import { IService } from "../Interfaces/Interfaces";
+import { IBootable, IInjectable } from "../Interfaces/Interfaces";
 import { ServiceLocator } from "../System/ServiceLocator";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass()
-export default class CameraBox extends cc.Component implements IService{
+export default class CameraBox extends cc.Component implements IInjectable, IBootable{
 
     private _camera: cc.Camera = null;
+
+    
+    _inject(): void {}
+    _init(): void {
+        this._camera = this.getComponent(cc.Camera);
+    }
 
 
     public get camera(): cc.Camera{
@@ -36,11 +42,4 @@ export default class CameraBox extends cc.Component implements IService{
 
         return width;
     }
-
-    onLoad () {
-        this._camera = this.getComponent(cc.Camera);        
-    }
-
-    _linkService(): void {}
-
 }
