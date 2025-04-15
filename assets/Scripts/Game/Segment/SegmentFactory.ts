@@ -20,7 +20,7 @@ export default class SegmentFactory implements IInjectable{
     _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
-        this.segmentPrefab = servloc.get(PrefabStorage).getPrefab("Segment");
+        this.segmentPrefab = servloc.get(PrefabStorage).getPrefabLazy("Segment");
     }
 
 

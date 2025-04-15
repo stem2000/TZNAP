@@ -1,10 +1,11 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
+import gBootableComponent from "../System/gBootableComponent";
 import { ServiceLocator } from "../System/ServiceLocator";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass()
-export default class CameraBox extends cc.Component implements IInjectable, IBootable{
+export default class CameraBox extends gBootableComponent{
 
     private _camera: cc.Camera = null;
 

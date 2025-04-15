@@ -1,5 +1,5 @@
 import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
-import { ServiceLocator } from "../../System/ServiceLocator";
+import { Constructor, ServiceLocator } from "../../System/ServiceLocator";
 import CameraBox from "../CameraBox";
 import Segment from "./Segment";
 import SegmentMover from "./SegmentMover";
@@ -40,9 +40,11 @@ export default class BasicMover extends SegmentMover implements IInjectable, IBo
         this.cameraBox = servloc.get(CameraBox);
     }
 
-    public override _init_(): void{
-        
+    public override get _ctor_(): Constructor {
+        return SegmentMover;
     }
+
+    public override _init_(): void{}
 
 
     public override addSegments(segments: Segment[]){        

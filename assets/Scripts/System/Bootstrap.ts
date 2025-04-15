@@ -1,7 +1,7 @@
 import LevelLoader from "../Game/LevelLoader";
 import PrefabStorage from "./PrefabStorage";
 import { ServiceLocator } from "./ServiceLocator";
-import BootstrapStrategy from "./ServiceRegistrations/BootstrapStrategy";
+import BootstrapStrategy from "./BootstrapStrategies/BootstrapStrategy";
 
 const {ccclass, property} = cc._decorator;
 

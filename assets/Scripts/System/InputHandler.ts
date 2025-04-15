@@ -1,12 +1,13 @@
 import SegmentMover from "../Game/Segment/SegmentMover";
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
+import gBootableComponent from "./gBootableComponent";
 import { ServiceLocator } from "./ServiceLocator";
 import { StateMachine } from "./StateMachine/StateMachine";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class InputHandler extends cc.Component implements IInjectable, IBootable {
+export default class InputHandler extends gBootableComponent{
 
     private segmentMover: SegmentMover;
     private stateMachine : StateMachine = new StateMachine();;

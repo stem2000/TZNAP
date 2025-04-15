@@ -1,4 +1,5 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
+import gBootable from "../System/gBootable";
 import { ServiceLocator } from "../System/ServiceLocator";
 import CameraBox from "./CameraBox";
 import Segment from "./Segment/Segment";
@@ -8,10 +9,9 @@ import SegmentMover from "./Segment/SegmentMover";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class LevelBuilder extends cc.Component implements IInjectable, IBootable{
+export default class LevelBuilder extends gBootable{
     segmentMover: SegmentMover;
     cameraBox: CameraBox;
-
 
     _inject_(): void {
         let servloc = ServiceLocator.getGlobal();

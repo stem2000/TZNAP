@@ -1,28 +1,14 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
+import { IBootable, IInjectable } from "../Interfaces/Interfaces";
+import { Constructor } from "./ServiceLocator";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class gBootableComponent extends cc.Component implements IInjectable, IBootable{
+    _init_(): void {}
+    _inject_(): void {}
 
-    @property(cc.Label)
-    label: cc.Label = null;
-
-    @property
-    text: string = 'hello';
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {}
-
-    start () {
-
+    public get _ctor_(): Constructor{
+        return this.constructor as Constructor<this>;
     }
-
-    // update (dt) {}
 }

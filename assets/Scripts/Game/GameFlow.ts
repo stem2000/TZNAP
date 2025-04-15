@@ -1,4 +1,5 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
+import gBootableComponent from "../System/gBootableComponent";
 import { ServiceLocator } from "../System/ServiceLocator";
 import { StateMachine } from "../System/StateMachine/StateMachine";
 import { GlobalEvent } from "./GlobalEvent";
@@ -7,7 +8,7 @@ import LevelLoader from "./LevelLoader";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class GameFlow extends cc.Component implements IInjectable, IBootable {
+export default class GameFlow extends gBootableComponent {
     levelLoader : LevelLoader;
     stateMachine : StateMachine;
 

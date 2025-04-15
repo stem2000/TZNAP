@@ -1,11 +1,12 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
+import gBootable from "./gBootable";
+import gBootableComponent from "./gBootableComponent";
 import PrefabContainer from "./PrefabContainer";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PrefabStorage extends cc.Component implements IInjectable, IBootable{
-
+export default class PrefabStorage extends gBootableComponent{
     @property([PrefabContainer])
     private containers: PrefabContainer[] = [];
 
@@ -14,7 +15,7 @@ export default class PrefabStorage extends cc.Component implements IInjectable, 
     _inject_(): void {}
     _init_(): void {}
 
-    public getPrefab(name: string){
+    public getPrefabLazy(name: string){
         if(this.mapPrefabs.length == 0 && this.containers.length != 0){
             this.mapPrefabs();
         }
