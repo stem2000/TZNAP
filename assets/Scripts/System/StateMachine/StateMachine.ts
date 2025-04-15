@@ -1,14 +1,14 @@
-import { gPredicate } from "./gPredicate";
-import { gState } from "./gState";
-import { gTransition } from "./gTransition";
+import { iPredicate } from "./iPredicate";
+import { iState } from "./iState";
+import { iTransition as iTransition } from "./iTransition";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export class StateMachine {
-    private current: gState | null = null;
-    private states: Map<Function, gState> = new Map();
-    private anyTransitions: Set<gTransition> = new Set();
+    private current: iState | null = null;
+    private states: Map<Function, iState> = new Map();
+    private anyTransitions: Set<iTransition> = new Set();
 
     update() {
         const transition = this.getTransition();
@@ -19,7 +19,7 @@ export class StateMachine {
         this.current?.state.update();
     }
 
-    setState(state: gState) {
+    setState(state: iState) {
         const temp = this.states.get(state.constructor);
         if (!temp) {
             throw new Error(`State not found: ${state.constructor.name}`);
@@ -28,7 +28,7 @@ export class StateMachine {
         this.current.state.onEnter();
     }
 
-    private changeState(state: gState) {
+    private changeState(state: iState) {
         if (this.current?.state === state) return;
 
         const nextState = this.states.get(state.constructor);
@@ -41,7 +41,7 @@ export class StateMachine {
         this.current = nextState;
     }
 
-    private getTransition(): gTransition | null {
+    private getTransition(): iTransition | null {
         const anyTransitions = Array.from(this.anyTransitions);
 
         for (const transition of anyTransitions) {
@@ -61,21 +61,21 @@ export class StateMachine {
         return null;
     }
 
-    addTransition(from: gState, to: gState, condition: gPredicate) {
+    addTransition(from: iState, to: iState, condition: iPredicate) {
         const fromState = this.getOrAddState(from);
         const toState = this.getOrAddState(to);
         fromState.addTransition(toState.state, condition);
     }
 
-    addAnyTransition(to: gState, condition: gPredicate) {
+    addAnyTransition(to: iState, condition: iPredicate) {
         const toState = this.getOrAddState(to);
-        this.anyTransitions.add(new gTransition(toState.state, condition));
+        this.anyTransitions.add(new iTransition(toState.state, condition));
     }
 
-    private getOrAddState(state: gState): gState {
+    private getOrAddState(state: iState): iState {
         const ctor = state.constructor;
         if (!this.states.has(ctor)) {
-            this.states.set(ctor, new gState());
+            this.states.set(ctor, new iState());
         }
         return this.states.get(ctor)!;
     }

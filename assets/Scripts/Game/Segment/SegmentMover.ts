@@ -1,5 +1,5 @@
 import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
-import gBootableComponent from "../../System/gBootableComponent";
+import iBootableComponent from "../../System/iBootableComponent";
 import { ServiceLocator } from "../../System/ServiceLocator";
 import CameraBox from "../CameraBox";
 import Segment from "./Segment";
@@ -8,7 +8,7 @@ import SegmentFactory from "./SegmentFactory";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class SegmentMover extends gBootableComponent{
+export default class SegmentMover extends iBootableComponent{
     public _init_(): void {}
     public _inject_(): void {}
 

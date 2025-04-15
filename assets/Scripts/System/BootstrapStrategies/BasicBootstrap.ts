@@ -1,5 +1,4 @@
 import CameraBox from "../../Game/CameraBox";
-import GameFlow from "../../Game/GameFlow";
 import { GlobalEvent } from "../../Game/GlobalEvent";
 import LevelBuilder from "../../Game/LevelBuilder";
 import LevelLoader from "../../Game/LevelLoader";
@@ -9,8 +8,8 @@ import PrefabStorage from "../PrefabStorage";
 import { ServiceLocator } from "../ServiceLocator";
 import InputHandler from "../InputHandler";
 import BootstrapStrategy from "./BootstrapStrategy";
-import gBootableComponent from "../gBootableComponent";
-import gBootable from "../gBootable";
+import iBootableComponent from "../iBootableComponent";
+import iBootable from "../iBootable";
 
 const {ccclass, property} = cc._decorator;
 
@@ -32,7 +31,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         cc.systemEvent.emit(GlobalEvent.BootstrapEnded);
     }
 
-    private registerBootables(): gBootable[]{
+    private registerBootables(): iBootable[]{
         let servloc = ServiceLocator.getGlobal();
         let bootables = [];
 
@@ -46,9 +45,9 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private registerBootableComponents(): gBootableComponent[]{
+    private registerBootableComponents(): iBootableComponent[]{
         let servloc = ServiceLocator.getGlobal();
-        let bootableComponents = this.getComponentsInChildren(gBootableComponent);
+        let bootableComponents = this.getComponentsInChildren(iBootableComponent);
 
         bootableComponents.forEach(component => {
             servloc.register(component._ctor_, component);
@@ -57,7 +56,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootableComponents;
     }
 
-    private injectInBootables(bootables : gBootable[]): gBootable[]{
+    private injectInBootables(bootables : iBootable[]): iBootable[]{
         bootables.forEach(bootable => {
             bootable._inject_();
         });
@@ -65,7 +64,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private injectInBootableComponents(bootableComponents : gBootableComponent[]): gBootable[]{
+    private injectInBootableComponents(bootableComponents : iBootableComponent[]): iBootable[]{
         bootableComponents.forEach(component => {
             component._inject_();
         });
@@ -73,7 +72,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootableComponents;
     }
 
-    private initializeBootables(bootables : gBootable[]): gBootable[] {
+    private initializeBootables(bootables : iBootable[]): iBootable[] {
         bootables.forEach(bootable => {
             bootable._init_();
         });
@@ -81,7 +80,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private initializeBootableComponents(bootableComponents : gBootableComponent[]): gBootable[]{
+    private initializeBootableComponents(bootableComponents : iBootableComponent[]): iBootable[]{
         bootableComponents.forEach(component => {
             component._init_();
         });

@@ -1,12 +1,12 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
-import gBootable from "./gBootable";
-import gBootableComponent from "./gBootableComponent";
+import iBootable from "./iBootable";
+import iBootableComponent from "./iBootableComponent";
 import PrefabContainer from "./PrefabContainer";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PrefabStorage extends gBootableComponent{
+export default class PrefabStorage extends iBootableComponent{
     @property([PrefabContainer])
     private containers: PrefabContainer[] = [];
 

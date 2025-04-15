@@ -1,5 +1,5 @@
 import { IInjectable } from "../../Interfaces/Interfaces";
-import gBootableComponent from "../../System/gBootableComponent";
+import iBootableComponent from "../../System/iBootableComponent";
 import { ServiceLocator } from "../../System/ServiceLocator";
 import { StateMachine } from "../../System/StateMachine/StateMachine";
 import Segment from "../Segment/Segment";
@@ -8,7 +8,7 @@ import Idle from "./States/Idle";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PLayer extends gBootableComponent{
+export default class PLayer extends iBootableComponent{
     stateMachine : StateMachine = new StateMachine();
     currentSeg: Segment;
     

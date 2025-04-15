@@ -1,13 +1,13 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
-import gBootable from "../System/gBootable";
-import gBootableComponent from "../System/gBootableComponent";
+import iBootable from "../System/iBootable";
+import iBootableComponent from "../System/iBootableComponent";
 import { ServiceLocator } from "../System/ServiceLocator";
 import LevelBuilder from "./LevelBuilder";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class LevelLoader extends gBootable{
+export default class LevelLoader extends iBootable{
     private levelBuilder: LevelBuilder;
 
     _init_(): void {}

@@ -1,3 +1,3 @@
-export class gPredicate{
+export class iPredicate{
     evaluate(): boolean {return undefined;};
 }

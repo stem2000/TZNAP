@@ -1,6 +1,6 @@
-import { gState } from "../../../System/StateMachine/gState";
+import { iState } from "../../../System/StateMachine/iState";
 
-export default class Idle extends gState {
+export default class Idle extends iState {
     public override onEnter(): void {};
     public override onExit(): void {};
     public override update(): void {}

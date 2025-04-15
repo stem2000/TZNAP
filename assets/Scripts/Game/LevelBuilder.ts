@@ -1,5 +1,5 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
-import gBootable from "../System/gBootable";
+import iBootable from "../System/iBootable";
 import { ServiceLocator } from "../System/ServiceLocator";
 import CameraBox from "./CameraBox";
 import Segment from "./Segment/Segment";
@@ -9,7 +9,7 @@ import SegmentMover from "./Segment/SegmentMover";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class LevelBuilder extends gBootable{
+export default class LevelBuilder extends iBootable{
     segmentMover: SegmentMover;
     cameraBox: CameraBox;
 

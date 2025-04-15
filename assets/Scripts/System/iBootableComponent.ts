@@ -4,7 +4,7 @@ import { Constructor } from "./ServiceLocator";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class gBootableComponent extends cc.Component implements IInjectable, IBootable{
+export default class iBootableComponent extends cc.Component implements IInjectable, IBootable{
     _init_(): void {}
     _inject_(): void {}
 
