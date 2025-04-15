@@ -1,7 +1,7 @@
 export interface IInjectable{
-    _inject(): void;
+    _inject_(): void;
 }
 
 export interface IBootable{
-    _init(): void;
+    _init_(): void;
 }

@@ -62,25 +62,25 @@ export default class BasicBootstrap extends BootstrapStrategy {
     }
 
     private injectServices(){
-        this.levelBuilder._inject();
-        this.levelLoader._inject();
-        this.segmentMover._inject();
-        this.cameraBox._inject();
-        this.prefabStorage._inject();
-        this.inputHandler._inject();
-        this.player._inject();
-        this.gameFlow._inject();
+        this.levelBuilder._inject_();
+        this.levelLoader._inject_();
+        this.segmentMover._inject_();
+        this.cameraBox._inject_();
+        this.prefabStorage._inject_();
+        this.inputHandler._inject_();
+        this.player._inject_();
+        this.gameFlow._inject_();
     }
 
     private initBootables(){
-        this.levelBuilder._init();
-        this.levelLoader._init();
-        this.segmentMover._init();
-        this.cameraBox._init();
-        this.prefabStorage._init();
-        this.inputHandler._init();
+        this.levelBuilder._init_();
+        this.levelLoader._init_();
+        this.segmentMover._init_();
+        this.cameraBox._init_();
+        this.prefabStorage._init_();
+        this.inputHandler._init_();
         this.player._init();
-        this.gameFlow._init();
+        this.gameFlow._init_();
     }
 
 

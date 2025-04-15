@@ -34,13 +34,13 @@ export default class BasicMover extends SegmentMover implements IInjectable, IBo
 
 
 
-    public override _inject(): void {
+    public override _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
         this.cameraBox = servloc.get(CameraBox);
     }
 
-    public override _init(): void{
+    public override _init_(): void{
         
     }
 

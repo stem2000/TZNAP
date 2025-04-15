@@ -11,8 +11,8 @@ export default class PrefabStorage extends cc.Component implements IInjectable, 
 
     private prefabMap: Map<string, cc.Prefab> = new Map();
 
-    _inject(): void {}
-    _init(): void {}
+    _inject_(): void {}
+    _init_(): void {}
 
     public getPrefab(name: string){
         if(this.mapPrefabs.length == 0 && this.containers.length != 0){

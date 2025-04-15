@@ -11,13 +11,13 @@ export default class InputHandler extends cc.Component implements IInjectable, I
     private segmentMover: SegmentMover;
     private stateMachine : StateMachine = new StateMachine();;
 
-    _inject(): void {
+    _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
         this.segmentMover = servloc.get(SegmentMover);
     }
 
-    _init(): void {
+    _init_(): void {
         this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
     }

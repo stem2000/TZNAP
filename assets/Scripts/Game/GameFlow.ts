@@ -11,11 +11,11 @@ export default class GameFlow extends cc.Component implements IInjectable, IBoot
     levelLoader : LevelLoader;
     stateMachine : StateMachine;
 
-    _init(): void {
+    _init_(): void {
         cc.systemEvent.on(GlobalEvent.BootstrapEnded, this.startGame, this);
     }
 
-    _inject(): void {
+    _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
         this.levelLoader = servloc.get(LevelLoader);

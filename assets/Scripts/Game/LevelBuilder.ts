@@ -13,14 +13,14 @@ export default class LevelBuilder extends cc.Component implements IInjectable, I
     cameraBox: CameraBox;
 
 
-    _inject(): void {
+    _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
         this.cameraBox = servloc.get(CameraBox);
         this.segmentMover = servloc.get(SegmentMover);
     }
 
-    _init(): void {}
+    _init_(): void {}
 
 
     buildOneSegmentedLevel(){

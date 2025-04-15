@@ -11,7 +11,7 @@ export default class PLayer extends cc.Component implements IInjectable{
     stateMachine : StateMachine = new StateMachine();
     currentSeg: Segment;
     
-    public _inject(): void {
+    public _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
     }
 

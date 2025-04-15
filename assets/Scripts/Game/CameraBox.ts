@@ -9,8 +9,8 @@ export default class CameraBox extends cc.Component implements IInjectable, IBoo
     private _camera: cc.Camera = null;
 
     
-    _inject(): void {}
-    _init(): void {
+    _inject_(): void {}
+    _init_(): void {
         this._camera = this.getComponent(cc.Camera);
     }
 

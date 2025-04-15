@@ -8,8 +8,8 @@ const {ccclass, property} = cc._decorator;
 export default class LevelLoader extends cc.Component implements IInjectable, IBootable {
     private levelBuilder: LevelBuilder;
 
-    _init(): void {}
-    _inject(): void {
+    _init_(): void {}
+    _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
         this.levelBuilder = servloc.get(LevelBuilder);

@@ -9,8 +9,8 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class SegmentMover extends cc.Component implements IInjectable, IBootable{
-    public _init(): void {}
-    public _inject(): void {}
+    public _init_(): void {}
+    public _inject_(): void {}
 
     public addSegments(segments: Segment[]){}
 
