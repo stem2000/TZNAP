@@ -1,28 +1,20 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
+import { GlobalEvent } from "../Game/GlobalEvent";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
-
-    @property(cc.Label)
-    label: cc.Label = null;
-
-    @property
-    text: string = 'hello';
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {}
-
-    start () {
-
-    }
-
-    // update (dt) {}
+export default class ReloadButton extends cc.Component {
+     private button : cc.Button;
+    
+        onEnable(){
+            this.button = this.getComponent(cc.Button);
+    
+            this.button.node.on('click', this.ReloadGame, this)
+        }
+    
+        private ReloadGame(){
+            cc.systemEvent.emit(GlobalEvent.GameReloaded);
+    
+            this.button.node.off('click', this.ReloadGame, this);
+        }
 }

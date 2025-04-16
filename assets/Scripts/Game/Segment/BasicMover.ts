@@ -12,28 +12,6 @@ export default class BasicMover extends SegmentMover implements IInjectable, IBo
     private cameraBox: CameraBox;
 
 
-    private get RightPoint(): cc.Vec3{
-        let x = this.cameraBox.right;
-
-        return new cc.Vec3(x, this.cameraBox.bot, 0);
-    }
-
-    private get leftPoint(): cc.Vec3{
-        let x = this.cameraBox.left;
-
-        return new cc.Vec3(x, this.cameraBox.bot, 0);
-    }
-
-    private get randomPoint(): cc.Vec3{
-        let x = Math.randomInRange(
-            this.segments[0].getRightEnd().x + this.segments[0].width / 2, 
-            this.cameraBox.right - this.segments[1].width);
-
-        return new cc.Vec3(x, this.cameraBox.bot, 0);
-    }
-
-
-
     public override _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
@@ -60,6 +38,10 @@ export default class BasicMover extends SegmentMover implements IInjectable, IBo
         ).start();
     }
 
+    public override getNext(): Segment {
+        return this.segments[1];
+    }
+
     private swap(){
         let temp = this.segments[0];
 
@@ -67,5 +49,26 @@ export default class BasicMover extends SegmentMover implements IInjectable, IBo
 
         this.segments[0] = this.segments[1];
         this.segments[1] = this.segments[0];
+    }
+
+    
+    private get RightPoint(): cc.Vec3{
+        let x = this.cameraBox.right;
+
+        return new cc.Vec3(x, this.cameraBox.bot, 0);
+    }
+
+    private get leftPoint(): cc.Vec3{
+        let x = this.cameraBox.left;
+
+        return new cc.Vec3(x, this.cameraBox.bot, 0);
+    }
+
+    private get randomPoint(): cc.Vec3{
+        let x = Math.randomInRange(
+            this.segments[0].getRightEnd().x + this.segments[0].width / 2, 
+            this.cameraBox.right - this.segments[1].width);
+
+        return new cc.Vec3(x, this.cameraBox.bot, 0);
     }
 }

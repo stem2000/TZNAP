@@ -29,7 +29,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
 
         this.configureCC();
 
-        cc.systemEvent.emit(GlobalEvent.BootstrapEnded);
+        cc.systemEvent.emit(GlobalEvent.GameBootstrapped);
     }
 
     private registerBootables(): iBootable[]{

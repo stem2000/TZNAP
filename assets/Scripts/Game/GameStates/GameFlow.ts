@@ -10,7 +10,7 @@ import { ServiceLocator } from "../../System/ServiceLocator";
 import GameBootState from "./GameBootState";
 import GamePlayState from "./GamePlayState";
 import InputHandler from "../../System/InputHandler";
-import GameLoadState from "./GameLoadState";
+import UiManager from "../../System/UiManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -25,22 +25,21 @@ export default class GameFlow extends iBootableComponent {
 
     levelLoader : LevelLoader;
     inputHandler : InputHandler;
+    uiManager : UiManager
 
     public _init_(): void {
-        cc.systemEvent.on(GlobalEvent.BootstrapEnded, ()=> {this.isGameBooted = true;}, this);
-        cc.systemEvent.on(GlobalEvent.PlayerDied, () => {this.isGameStarted = false; this.isGameEnded = true, this});
+        cc.systemEvent.on(GlobalEvent.GameBootstrapped, ()=> {this.isGameBooted = true;}, this);
+        cc.systemEvent.on(GlobalEvent.GameEnded, () => {this.isGameStarted = false; this.isGameEnded = true, this});
         cc.systemEvent.on(GlobalEvent.GameStarted, () => {this.isGameStarted = true;}, this)
 
         let gameBootState = new GameBootState();
-        let gameLoadState = new GameLoadState(this.levelLoader);
-        let gameStartState = new GameStartState();
-        let gamePlayState = new GamePlayState();
-        let gameEndState = new GameEndState();
+        let gameStartState = new GameStartState(this.levelLoader, this.uiManager);
+        let gamePlayState = new GamePlayState(this.uiManager);
+        let gameEndState = new GameEndState(this.uiManager);
         let gameReloadState = new GameReloadState(this.levelLoader);
         
-        this.stateMachine.addTransition(gameBootState, gameLoadState, new FuncPredicate(() => this.isGameBooted));
-        this.stateMachine.addTransition(gameLoadState, gameStartState, new FuncPredicate(() => this.isGameStarted));
-        this.stateMachine.addTransition(gameStartState, gameEndState, new FuncPredicate(() => this.isGameEnded));
+        this.stateMachine.addTransition(gameBootState, gameStartState, new FuncPredicate(() => this.isGameBooted));
+        this.stateMachine.addTransition(gameStartState, gamePlayState, new FuncPredicate(() => this.isGameStarted));
 
         this.stateMachine.setState(gameBootState);
     }
@@ -49,6 +48,7 @@ export default class GameFlow extends iBootableComponent {
         let servloc = ServiceLocator.getGlobal();
 
         this.levelLoader = servloc.get(LevelLoader);
+        this.uiManager = servloc.get(UiManager);
     }
 
     protected update(dt: number): void {

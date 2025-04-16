@@ -2,6 +2,7 @@ import { IBootable, IInjectable } from "../Interfaces/Interfaces";
 import iBootable from "../System/iBootable";
 import { ServiceLocator } from "../System/ServiceLocator";
 import CameraBox from "./CameraBox";
+import Player from "./Player/Player";
 import Segment from "./Segment/Segment";
 import SegmentFactory from "./Segment/SegmentFactory";
 import SegmentMover from "./Segment/SegmentMover";
@@ -12,6 +13,7 @@ const {ccclass, property} = cc._decorator;
 export default class LevelBuilder extends iBootable{
     segmentMover: SegmentMover;
     cameraBox: CameraBox;
+    player: Player;
 
     _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
@@ -24,14 +26,14 @@ export default class LevelBuilder extends iBootable{
 
 
     buildOneSegmentedLevel(){
-        this.createSegments();
+        let segments = this.createSegments();
     }
 
     buildTwoSegmentedLevel(){
 
     }
 
-    createSegments(){
+    createSegments(): Segment[]{
         let segments = new SegmentFactory().createSegments(2);
 
         let scene = cc.director.getScene();
@@ -47,5 +49,7 @@ export default class LevelBuilder extends iBootable{
         segments[1].moveQuick(new cc.Vec3(this.cameraBox.right, this.cameraBox.bot, 0));
 
         this.segmentMover.addSegments(segments);
+
+        return segments;
     }
 }
