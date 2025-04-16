@@ -17,12 +17,13 @@ const {ccclass, property} = cc._decorator;
 export default class BasicBootstrap extends BootstrapStrategy {
 
     public override Boot() {
+        
         let bootables = this.registerBootables();
-        let bootableComponents = this.registerBootableComponents();
+        let bootableComponents = this.registerBootableComponents(this.getBootables());
         
         this.injectInBootables(bootables);
         this.injectInBootableComponents(bootableComponents);
-
+        
         this.initializeBootables(bootables);
         this.initializeBootableComponents(bootableComponents);
 
@@ -45,9 +46,9 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private registerBootableComponents(): iBootableComponent[]{
+    private registerBootableComponents(bootables : iBootableComponent[]): iBootableComponent[]{
         let servloc = ServiceLocator.getGlobal();
-        let bootableComponents = this.getComponentsInChildren(iBootableComponent);
+        let bootableComponents = bootables;
 
         bootableComponents.forEach(component => {
             servloc.register(component._ctor_, component);
@@ -62,6 +63,21 @@ export default class BasicBootstrap extends BootstrapStrategy {
         });
 
         return bootables;
+    }
+
+    private getBootables(): iBootableComponent[]{
+        let bootableComponents = [];
+
+        this.node.children.forEach(child => {
+                let bootables = child.getComponentsInChildren(cc.Component);
+                
+                bootables.forEach(bootable => {
+                    if(bootable instanceof iBootableComponent)
+                        bootableComponents.push(bootable);
+            });
+        });
+
+        return bootableComponents;
     }
 
     private injectInBootableComponents(bootableComponents : iBootableComponent[]): iBootable[]{

@@ -10,7 +10,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class PLayer extends iBootableComponent{
     stateMachine : StateMachine = new StateMachine();
-    currentSeg: Segment;
+    currentSegment: Segment;
     
     public _inject_(): void {
         let servloc = ServiceLocator.getGlobal();

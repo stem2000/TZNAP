@@ -1,5 +1,5 @@
 export enum GlobalEvent {
-    StartGame = "StartGame",
+    GameStarted = "GameStarted",
     PlayerDied = "PlayerDied",
     GetPoint = "GetPoint",
     GetSuperPoint = "GetSuperPoint",

@@ -33,9 +33,6 @@ export default class InputHandler extends iBootableComponent{
 
     onTouchEnd (event) {
         let screenPos = event.getLocation();
-
-        //temporary
-        this.segmentMover.move();
     }
 
     onDestroy () {

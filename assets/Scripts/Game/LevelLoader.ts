@@ -22,4 +22,8 @@ export default class LevelLoader extends iBootable{
         this.levelBuilder.buildOneSegmentedLevel();
     }
 
+    public loadTwoSegmentedLevel(){
+        this.levelBuilder.buildTwoSegmentedLevel();
+    }
+
 }
