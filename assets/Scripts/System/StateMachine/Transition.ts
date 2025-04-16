@@ -1,7 +1,7 @@
 import { iPredicate } from "./iPredicate";
 import { iState } from "./iState";
 
-export class iTransition {
+export class Transition {
     public readonly to: iState;
     public readonly condition: iPredicate;
 

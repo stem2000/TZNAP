@@ -1,14 +1,15 @@
 import { iPredicate } from "./iPredicate";
 import { iState } from "./iState";
-import { iTransition as iTransition } from "./iTransition";
+import StateNode from "./StateNode";
+import { Transition as Transition } from "./Transition";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export class StateMachine {
-    private current: iState | null = null;
-    private states: Map<Function, iState> = new Map();
-    private anyTransitions: Set<iTransition> = new Set();
+    private current: StateNode | null = null;
+    private states: Map<Function, StateNode> = new Map();
+    private anyTransitions: Set<Transition> = new Set();
 
     update() {
         const transition = this.getTransition();
@@ -20,28 +21,29 @@ export class StateMachine {
     }
 
     setState(state: iState) {
-        const temp = this.states.get(state.constructor);
-        if (!temp) {
+        const node = this.states.get(state.constructor);
+        if (!node) {
             throw new Error(`State not found: ${state.constructor.name}`);
         }
-        this.current = temp;
+        this.current = node;
         this.current.state.onEnter();
     }
 
     private changeState(state: iState) {
         if (this.current?.state === state) return;
 
-        const nextState = this.states.get(state.constructor);
-        if (!nextState) {
+        const nextNode = this.states.get(state.constructor);
+
+        if (!nextNode) {
             throw new Error(`Next state not found: ${state.constructor.name}`);
         }
 
         this.current?.state.onExit();
-        nextState.state.onEnter();
-        this.current = nextState;
+        nextNode.state.onEnter();
+        this.current = nextNode;
     }
 
-    private getTransition(): iTransition | null {
+    private getTransition(): Transition | null {
         const anyTransitions = Array.from(this.anyTransitions);
 
         for (const transition of anyTransitions) {
@@ -69,14 +71,15 @@ export class StateMachine {
 
     addAnyTransition(to: iState, condition: iPredicate) {
         const toState = this.getOrAddState(to);
-        this.anyTransitions.add(new iTransition(toState.state, condition));
+        this.anyTransitions.add(new Transition(toState.state, condition));
     }
 
-    private getOrAddState(state: iState): iState {
+    private getOrAddState(state: iState): StateNode {
         const ctor = state.constructor;
         if (!this.states.has(ctor)) {
-            this.states.set(ctor, new iState());
+            this.states.set(ctor, new StateNode(state));
         }
+        
         return this.states.get(ctor)!;
     }
 }

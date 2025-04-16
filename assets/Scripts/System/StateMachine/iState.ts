@@ -1,8 +1,8 @@
 import { iPredicate } from "./iPredicate";
-import { iTransition as iTransition } from "./iTransition";
+import { Transition as Transition } from "./Transition";
 
 export class iState {
-    public transitions: Set<iTransition> = new Set();
+    public transitions: Set<Transition> = new Set();
 
 
     public get state(): iState{
@@ -14,7 +14,7 @@ export class iState {
     }
 
     public addTransition(to: iState, condition: iPredicate) {
-        this.transitions.add(new iTransition(to, condition));
+        this.transitions.add(new Transition(to, condition));
     }
 
     public onEnter(): void {};
