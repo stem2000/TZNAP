@@ -1,4 +1,4 @@
-import SegmentMover from "../Game/Segment/SegmentMover";
+import SegmentManager from "../Game/Segment/SegmentManager";
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
 import iBootableComponent from "./iBootableComponent";
 import { ServiceLocator } from "./ServiceLocator";
@@ -9,22 +9,11 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class InputHandler extends iBootableComponent{
 
-    private segmentMover: SegmentMover;
-    private stateMachine : StateMachine = new StateMachine();;
-
-    _inject_(): void {
-        let servloc = ServiceLocator.getGlobal();
-
-        this.segmentMover = servloc.get(SegmentMover);
-    }
+    _inject_(): void {}
 
     _init_(): void {
         this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
-    }
-
-    update(){
-        this.stateMachine.update();
     }
 
     onTouchStart (event) {

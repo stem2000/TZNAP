@@ -8,7 +8,7 @@ import SegmentFactory from "./SegmentFactory";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class SegmentMover extends iBootableComponent{
+export default class SegmentManager extends iBootableComponent{
     public _init_(): void {}
     public _inject_(): void {}
 

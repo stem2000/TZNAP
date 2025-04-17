@@ -1,13 +1,16 @@
 import CameraBox from "../../Game/CameraBox";
 import { GlobalEvent } from "../../Game/GlobalEvent";
 import Player from "../../Game/Player/Player";
-import SegmentMover from "../../Game/Segment/SegmentMover";
+import SegmentMover from "../../Game/Segment/SegmentManager";
 import PrefabStorage from "../PrefabStorage";
 import { ServiceLocator } from "../ServiceLocator";
 import InputHandler from "../InputHandler";
 import BootstrapStrategy from "./BootstrapStrategy";
 import iBootableComponent from "../iBootableComponent";
 import iBootable from "../iBootable";
+import GameFlow from "../../Game/GameStates/GameFlow";
+import BasicSegmentManager from "../../Game/Segment/BasicSegmentManager";
+import SegmentManager from "../../Game/Segment/SegmentManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -16,10 +19,11 @@ export default class BasicBootstrap extends BootstrapStrategy {
 
     initSequence: Function[] = [
         CameraBox,
-        SegmentMover,
+        SegmentManager,
         PrefabStorage,
         InputHandler,
-        Player
+        Player, 
+        GameFlow
     ]
 
     public override Boot() {
@@ -78,7 +82,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootableComponents;
     }
 
-    private injectInBootableComponents(bootableComponents : iBootableComponent[]): iBootable[]{
+    private injectInBootableComponents(bootableComponents : iBootableComponent[]): iBootableComponent[]{
         bootableComponents.forEach(component => {
             component._inject_();
         });
@@ -94,9 +98,14 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private initializeBootableComponents(bootableComponents : iBootableComponent[]): iBootable[]{
-        bootableComponents.forEach(component => {
-            component._init_();
+    private initializeBootableComponents(bootableComponents : iBootableComponent[]): iBootableComponent[]{
+
+        this.initSequence.forEach((ComponentType) => {
+            const bootable = bootableComponents.find(c => c instanceof ComponentType);
+            if (bootable) {
+                bootable._init_();
+                cc.log(bootable);
+            }
         });
 
         return bootableComponents;

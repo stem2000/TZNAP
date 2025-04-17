@@ -1,16 +1,17 @@
 import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
 import { Constructor, ServiceLocator } from "../../System/ServiceLocator";
 import CameraBox from "../CameraBox";
+import SegmentBuilder from "../SegmentBuilder";
 import Segment from "./Segment";
-import SegmentMover from "./SegmentMover";
+import SegmentManager from "./SegmentManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class BasicMover extends SegmentMover implements IInjectable, IBootable{
-    private segments : Segment[];
+export default class BasicSegmentManager extends SegmentManager implements IInjectable, IBootable{
+    private segments: Segment[];
     private cameraBox: CameraBox;
-
+    private segmentBuilder: SegmentBuilder;
 
     public override _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
@@ -19,10 +20,14 @@ export default class BasicMover extends SegmentMover implements IInjectable, IBo
     }
 
     public override get _ctor_(): Constructor {
-        return SegmentMover;
+        return SegmentManager;
     }
 
-    public override _init_(): void{}
+    public override _init_(): void{
+        this.segmentBuilder = new SegmentBuilder(this.cameraBox);
+
+        this.segments = this.segmentBuilder.buildOneSegmentedLevel();
+    }
 
 
     public override addSegments(segments: Segment[]){        

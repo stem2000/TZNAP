@@ -6,15 +6,17 @@ import { LevelType } from "./LevelType";
 import Player from "./Player/Player";
 import Segment from "./Segment/Segment";
 import SegmentFactory from "./Segment/SegmentFactory";
-import SegmentMover from "./Segment/SegmentMover";
+import SegmentManager from "./Segment/SegmentManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class SegmentBuilder{
-    segmentMover: SegmentMover;
     cameraBox: CameraBox;
 
+    public constructor(cameraBox: CameraBox){
+        this.cameraBox = cameraBox;
+    }
 
     getSegments(levelType: LevelType) : Segment[]{
         switch(levelType){
