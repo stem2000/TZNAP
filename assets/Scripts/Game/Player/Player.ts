@@ -8,7 +8,7 @@ import Idle from "./States/Idle";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PLayer extends iBootableComponent{
+export default class Player extends iBootableComponent{
     stateMachine : StateMachine = new StateMachine();
     currentSegment: Segment;
     

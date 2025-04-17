@@ -1,7 +1,6 @@
 import iBootableComponent from "../../System/iBootableComponent";
 import { StateMachine } from "../../System/StateMachine/StateMachine";
 import { GlobalEvent } from "../GlobalEvent";
-import LevelLoader from "../LevelLoader";
 import GameReloadState from "./GameReloadState";
 import GameEndState from "./GameEndState";
 import GameStartState from "./GameStartState";
@@ -23,7 +22,6 @@ export default class GameFlow extends iBootableComponent {
     isGameEnded: boolean;
     isGameReloaded: boolean;
 
-    levelLoader : LevelLoader;
     inputHandler : InputHandler;
     uiManager : UiManager
 
@@ -33,10 +31,10 @@ export default class GameFlow extends iBootableComponent {
         cc.systemEvent.on(GlobalEvent.GameStarted, () => {this.isGameStarted = true;}, this)
 
         let gameBootState = new GameBootState();
-        let gameStartState = new GameStartState(this.levelLoader, this.uiManager);
+        let gameStartState = new GameStartState(this.uiManager);
         let gamePlayState = new GamePlayState(this.uiManager);
         let gameEndState = new GameEndState(this.uiManager);
-        let gameReloadState = new GameReloadState(this.levelLoader);
+        let gameReloadState = new GameReloadState();
         
         this.stateMachine.addTransition(gameBootState, gameStartState, new FuncPredicate(() => this.isGameBooted));
         this.stateMachine.addTransition(gameStartState, gamePlayState, new FuncPredicate(() => this.isGameStarted));
@@ -47,7 +45,6 @@ export default class GameFlow extends iBootableComponent {
     public _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
 
-        this.levelLoader = servloc.get(LevelLoader);
         this.uiManager = servloc.get(UiManager);
     }
 

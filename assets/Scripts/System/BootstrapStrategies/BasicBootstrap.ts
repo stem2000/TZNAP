@@ -1,7 +1,5 @@
 import CameraBox from "../../Game/CameraBox";
 import { GlobalEvent } from "../../Game/GlobalEvent";
-import LevelBuilder from "../../Game/LevelBuilder";
-import LevelLoader from "../../Game/LevelLoader";
 import Player from "../../Game/Player/Player";
 import SegmentMover from "../../Game/Segment/SegmentMover";
 import PrefabStorage from "../PrefabStorage";
@@ -15,6 +13,14 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass()
 export default class BasicBootstrap extends BootstrapStrategy {
+
+    initSequence: Function[] = [
+        CameraBox,
+        SegmentMover,
+        PrefabStorage,
+        InputHandler,
+        Player
+    ]
 
     public override Boot() {
         
@@ -33,15 +39,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
     }
 
     private registerBootables(): iBootable[]{
-        let servloc = ServiceLocator.getGlobal();
         let bootables = [];
-
-        bootables.push(new LevelBuilder());
-        bootables.push(new LevelLoader());
-
-        bootables.forEach(bootable => {
-            servloc.register(bootable.constructor, bootable);
-        });
 
         return bootables;
     }
