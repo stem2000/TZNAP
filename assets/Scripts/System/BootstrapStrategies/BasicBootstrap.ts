@@ -3,7 +3,7 @@ import { GlobalEvent } from "../../Game/GlobalEvent";
 import Player from "../../Game/Player/Player";
 import SegmentMover from "../../Game/Segment/SegmentManager";
 import PrefabStorage from "../PrefabStorage";
-import { ServiceLocator } from "../ServiceLocator";
+import { Constructor, ServiceLocator } from "../ServiceLocator";
 import InputHandler from "../InputHandler";
 import BootstrapStrategy from "./BootstrapStrategy";
 import iBootableComponent from "../iBootableComponent";
@@ -11,6 +11,7 @@ import iBootable from "../iBootable";
 import GameFlow from "../../Game/GameStates/GameFlow";
 import BasicSegmentManager from "../../Game/Segment/BasicSegmentManager";
 import SegmentManager from "../../Game/Segment/SegmentManager";
+import PlayerValidator from "../../Game/PlayerValidator";
 
 const {ccclass, property} = cc._decorator;
 
@@ -39,11 +40,18 @@ export default class BasicBootstrap extends BootstrapStrategy {
 
         this.configureCC();
 
-        cc.systemEvent.emit(GlobalEvent.GameBootstrapped);
+        ServiceLocator.getGlobal().get(GameFlow).makeGameStartable();
     }
 
     private registerBootables(): iBootable[]{
-        let bootables = [];
+        let servloc = ServiceLocator.getGlobal();
+        let bootables = [
+            new PlayerValidator()
+        ];
+
+        bootables.forEach(bootable =>{
+            servloc.register(bootable.constructor as Constructor, bootable);
+        })
 
         return bootables;
     }
@@ -104,7 +112,6 @@ export default class BasicBootstrap extends BootstrapStrategy {
             const bootable = bootableComponents.find(c => c instanceof ComponentType);
             if (bootable) {
                 bootable._init_();
-                cc.log(bootable);
             }
         });
 

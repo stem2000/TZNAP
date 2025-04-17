@@ -19,6 +19,11 @@ export default class SegmentManager extends iBootableComponent{
         return undefined;
     };
 
+    public getProximate(): Segment{
+        cc.log("Should override super.getProximate() on " + this);
+        return undefined;
+    }
+
     public move(){};
 
 }

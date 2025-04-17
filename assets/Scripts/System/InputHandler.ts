@@ -1,3 +1,4 @@
+import { GlobalEvent } from "../Game/GlobalEvent";
 import SegmentManager from "../Game/Segment/SegmentManager";
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
 import iBootableComponent from "./iBootableComponent";
@@ -18,10 +19,12 @@ export default class InputHandler extends iBootableComponent{
 
     onTouchStart (event) {
         let screenPos = event.getLocation();
+        cc.systemEvent.emit(GlobalEvent.ScreenTouchStarted);
     }
 
     onTouchEnd (event) {
         let screenPos = event.getLocation();
+        cc.systemEvent.emit(GlobalEvent.ScreenTouchEnded);
     }
 
     onDestroy () {

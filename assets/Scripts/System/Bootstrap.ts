@@ -1,4 +1,3 @@
-import LevelLoader from "../Game/LevelLoader";
 import PrefabStorage from "./PrefabStorage";
 import { ServiceLocator } from "./ServiceLocator";
 import BootstrapStrategy from "./BootstrapStrategies/BootstrapStrategy";

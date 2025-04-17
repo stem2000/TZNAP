@@ -14,7 +14,7 @@ export default class StartButton extends cc.Component {
     }
 
     private StartGame(){
-        cc.systemEvent.emit(GlobalEvent.GameStarted);
+        cc.systemEvent.emit(GlobalEvent.StartButtonPressed);
 
         this.button.node.off('click', this.StartGame, this);
     }

@@ -3,13 +3,17 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class SegmentView extends cc.Component {
     @property(cc.Sprite)
-    sprite: cc.Sprite = null;
+    body: cc.Sprite = null;
+
+    @property(cc.Sprite)
+    perfectZone: cc.Sprite = null;
 
     start(){
-        this.node.color = new cc.Color(Math.randomInRange(0, 255), Math.randomInRange(0, 255), Math.randomInRange(0, 255), 255);
+
     }
 
-    public rebuild(width: number, height: number){
-        this.sprite.node.setContentSize(width, height);
+    public rebuild(width: number, height: number, center: number){
+        this.body.node.setContentSize(width, height);
+        this.perfectZone.node.position = new cc.Vec3(center, height, 0);
     }
 }

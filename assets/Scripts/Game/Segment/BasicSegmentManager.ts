@@ -1,6 +1,8 @@
 import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
 import { Constructor, ServiceLocator } from "../../System/ServiceLocator";
 import CameraBox from "../CameraBox";
+import { GlobalEvent } from "../GlobalEvent";
+import PlayerValidator from "../PlayerValidator";
 import SegmentBuilder from "../SegmentBuilder";
 import Segment from "./Segment";
 import SegmentManager from "./SegmentManager";
@@ -39,8 +41,12 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
         let tweenToRandom = this.segments[1].rebuild().getTweenTo(this.randomPoint);
 
         tweenToLeft.call(()=>
-            tweenToRandom.start()
+            tweenToRandom.call(this.onMoveEnded).start()
         ).start();
+    }
+
+    public override getProximate(): Segment {
+        return this.segments[0];
     }
 
     public override getNext(): Segment {
@@ -54,6 +60,10 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
 
         this.segments[0] = this.segments[1];
         this.segments[1] = this.segments[0];
+    }
+
+    private onMoveEnded(){
+
     }
 
     
@@ -71,7 +81,7 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
 
     private get randomPoint(): cc.Vec3{
         let x = Math.randomInRange(
-            this.segments[0].getRightEnd().x + this.segments[0].width / 2, 
+            this.segments[0].getRightEnd().x + 0.1, 
             this.cameraBox.right - this.segments[1].width);
 
         return new cc.Vec3(x, this.cameraBox.bot, 0);

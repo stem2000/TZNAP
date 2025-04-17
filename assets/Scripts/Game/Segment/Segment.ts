@@ -29,9 +29,15 @@ export default class Segment extends cc.Component {
         return this.height_;
     }
 
+    private get center(): number{
+        let center = this.width / 2;
+
+        return center;
+    }
+
 
     public build(): Segment{
-        this.view.rebuild(this.width_, this.height_);
+        this.view.rebuild(this.width_, this.height_, this.center);
 
         return this;
     }
@@ -39,7 +45,7 @@ export default class Segment extends cc.Component {
     public rebuild():Segment {
         this.width_ = this.widthLimits.getValueInLimits();
 
-        this.view.rebuild(this.width_, this.height_);
+        this.view.rebuild(this.width_, this.height_, this.center);
         return this;
     }
 
@@ -54,18 +60,20 @@ export default class Segment extends cc.Component {
 
     public getLeftEnd(): cc.Vec2{
         let leftEnd = new cc.Vec2();
+        let worldPosition = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
 
-        leftEnd.x = this.node.position.x - this.width_ / 2;
-        leftEnd.y = this.height_;
+        leftEnd.x = worldPosition.x - this.width_;
+        leftEnd.y = worldPosition.y + this.height_;
 
         return leftEnd;
     }
 
     public getRightEnd(){
         let rightEnd = new cc.Vec2();
+        let worldPosition = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
 
-        rightEnd.x = this.node.position.x + this.width_ / 2;
-        rightEnd.y = this.height_;
+        rightEnd.x = worldPosition.x + this.width_;
+        rightEnd.y = worldPosition.y + this.height_;
 
         return rightEnd;
     }

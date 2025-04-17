@@ -13,7 +13,7 @@ export default class ReloadButton extends cc.Component {
         }
     
         private ReloadGame(){
-            cc.systemEvent.emit(GlobalEvent.GameReloaded);
+            cc.systemEvent.emit(GlobalEvent.ReloadButtonPressed);
     
             this.button.node.off('click', this.ReloadGame, this);
         }

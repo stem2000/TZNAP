@@ -1,8 +1,9 @@
 export enum GlobalEvent {
-    GameBootstrapped = "GameBootstrapped",
-    GameStarted = "GameStarted",
-    GameEnded = "GameEnded",
-    GameReloaded = "GameReloaded",
+    StartButtonPressed = "StartButtonPressed",
+    PlayerDied = "PlayerDied",
+    ReloadButtonPressed = "ReloadButtonPressed",
     PointReceived = "PointReceived",
-    SuperPointReceived = "SuperPointReceived"
+    SuperPointReceived = "SuperPointReceived",
+    ScreenTouchStarted = "ScreenTouchStarted",
+    ScreenTouchEnded = "ScreenTouchEnded"
 }
