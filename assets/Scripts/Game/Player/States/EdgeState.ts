@@ -15,10 +15,15 @@ export default class EdgeState extends iState {
 
     public override onEnter(): void {
         let edgePosition = this.validator.GetProximateSegment().getRightEnd();
-
-        cc.tween(this.player.node).to(0.5, { position: new cc.Vec3(edgePosition.x, edgePosition.y, 0) }).call(() => {
+   
+        if(cc.Vec3.distance(this.player.node.position, new cc.Vec3(edgePosition.x, edgePosition.y, 0)) > 0.3){
+            cc.tween(this.player.node).to(0.3, { position: new cc.Vec3(edgePosition.x, edgePosition.y, 0) }).call(() => {
+                this.player.unlockBuilding();
+            }).start();
+        }
+        else{
             this.player.unlockBuilding();
-        }).start();
+        }
     };
 
     public override onExit(): void {};

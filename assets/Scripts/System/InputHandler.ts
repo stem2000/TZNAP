@@ -31,4 +31,12 @@ export default class InputHandler extends iBootableComponent{
         this.node.off(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.node.off(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
     }
+
+    public inputOn(){
+
+    }
+
+    public inputOff(){
+
+    }
 }

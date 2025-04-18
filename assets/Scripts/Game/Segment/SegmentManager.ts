@@ -14,7 +14,7 @@ export default class SegmentManager extends iBootableComponent{
 
     public addSegments(segments: Segment[]){}
 
-    public getNext(): Segment {
+    public getNextSegment(): Segment {
         cc.log("Should override super.getNext() on " + this);    
         return undefined;
     };
@@ -25,5 +25,7 @@ export default class SegmentManager extends iBootableComponent{
     }
 
     public move(){};
+
+    public swap(){};
 
 }

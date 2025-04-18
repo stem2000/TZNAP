@@ -2,6 +2,7 @@ import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
 import { Constructor, ServiceLocator } from "../../System/ServiceLocator";
 import CameraBox from "../CameraBox";
 import { GlobalEvent } from "../GlobalEvent";
+import Player from "../Player/Player";
 import PlayerValidator from "../PlayerValidator";
 import SegmentBuilder from "../SegmentBuilder";
 import Segment from "./Segment";
@@ -14,11 +15,14 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
     private segments: Segment[];
     private cameraBox: CameraBox;
     private segmentBuilder: SegmentBuilder;
+    private player: Player;
 
     public override _inject_(): void {
         let servloc = ServiceLocator.getGlobal();
-
+        
         this.cameraBox = servloc.get(CameraBox);
+        this.player = servloc.get(Player);
+
     }
 
     public override get _ctor_(): Constructor {
@@ -41,7 +45,7 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
         let tweenToRandom = this.segments[1].rebuild().getTweenTo(this.randomPoint);
 
         tweenToLeft.call(()=>
-            tweenToRandom.call(this.onMoveEnded).start()
+            tweenToRandom.call(() => {this.onMoveEnded()}).start()
         ).start();
     }
 
@@ -49,11 +53,11 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
         return this.segments[0];
     }
 
-    public override getNext(): Segment {
+    public override getNextSegment(): Segment {
         return this.segments[1];
     }
 
-    private swap(){
+    public override swap(){
         let temp = this.segments[0];
 
         this.segments[0].moveQuick(this.RightPoint);
@@ -63,7 +67,7 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
     }
 
     private onMoveEnded(){
-
+        this.player.moveToEdge();
     }
 
     

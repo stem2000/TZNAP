@@ -77,4 +77,14 @@ export default class Segment extends cc.Component {
 
         return rightEnd;
     }
+
+    public getMarginsVec2(): cc.Vec2{
+        let worldPosition = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
+        let margins = new cc.Vec2;
+
+        margins.x = worldPosition.x - this.width_;
+        margins.y = worldPosition.x + this.width_;
+
+        return margins;
+    }
 }
