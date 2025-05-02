@@ -1,35 +1,28 @@
 import { iState } from "../../../System/StateMachine/iState";
-import { GlobalEvent } from "../../GlobalEvent";
 import Hitline from "../../Hitline";
-import PlayerValidator from "../../PlayerValidator";
-import HitlineBuilding from "../HitlineBuilding";
+import GameplayCoordinator from "../../GameplayCoordinator";
+import Player from "../Player";
 
 export default class BuildState extends iState {
     hitline: Hitline;
-    validator: PlayerValidator;
+    player: Player;
+    validator: GameplayCoordinator;
 
-    public constructor(hitline: Hitline, validator: PlayerValidator){
+    public constructor(hitline: Hitline, validator: GameplayCoordinator){
         super();
 
         this.hitline = hitline;
         this.validator = validator;
     }
 
-    public override onEnter(): void {
-       this.subscribeToInputEvents();
-    };
+    public override onEnter(): void {}
 
     public override onExit(): void {}
 
     public override update(): void {}
 
-    private subscribeToInputEvents(){
-        cc.systemEvent.once(GlobalEvent.ScreenTouchStarted, this.startBuilding, this);
-    }
-
     private startBuilding(){
         this.hitline.startGrowing();
-        cc.systemEvent.once(GlobalEvent.ScreenTouchEnded, this.stopBuilding, this);
     }
 
     private stopBuilding(){

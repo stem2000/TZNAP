@@ -1,23 +1,23 @@
 import { iState } from "../../../System/StateMachine/iState";
-import PlayerValidator from "../../PlayerValidator";
+import GameplayCoordinator from "../../GameplayCoordinator";
 import Segment from "../../Segment/Segment";
 import Player from "../Player";
 import PlayerMoving from "../PlayerMoving";
 
 export default class StickState extends iState {
     moving: PlayerMoving;
-    validator: PlayerValidator;
+    coordinator: GameplayCoordinator;
     stickSegment: Segment;
 
-    public constructor(validator: PlayerValidator, moving: PlayerMoving){
+    public constructor(coordinator: GameplayCoordinator, moving: PlayerMoving){
         super();
 
-        this.validator = validator;
+        this.coordinator = coordinator;
         this.moving = moving;
     }
 
     public override onEnter(): void {
-        this.stickSegment = this.validator.GetProximateSegment();
+        this.stickSegment = this.coordinator.GetProximateSegment();
     };
 
     public override onExit(): void {};
@@ -25,6 +25,6 @@ export default class StickState extends iState {
     public override update(): void {
         let target = this.stickSegment.getRightEnd();
 
-        this.moving.moveTo(new cc.Vec3(target.x, target.y, 0));
+        this.moving.stickTo(new cc.Vec3(target.x, target.y, 0));
     }
 }

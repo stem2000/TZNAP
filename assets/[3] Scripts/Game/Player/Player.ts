@@ -3,7 +3,8 @@ import { Constructor, ServiceContainer } from "../../System/ServiceContainer";
 import FuncPredicate from "../../System/StateMachine/FuncPredicate";
 import { StateMachine } from "../../System/StateMachine/StateMachine";
 import Hitline from "../Hitline";
-import PlayerValidator from "../PlayerValidator";
+import GameplayCoordinator from "../GameplayCoordinator";
+import SegmentManager from "../Segment/SegmentManager";
 import PlayerMoving from "./PlayerMoving";
 import BuildState from "./States/BuildState";
 import EdgeState from "./States/EdgeState";
@@ -26,20 +27,20 @@ export default class Player extends aBootableServiceComponent{
 
     @property(Hitline)
     hitline: Hitline = null;
-    
-    validator: PlayerValidator;
+
+    coordinator: GameplayCoordinator;
     
     public override _inject_(container: ServiceContainer): void {
-        this.validator = container.get(PlayerValidator);
+        this.coordinator = container.get(GameplayCoordinator);
     }
 
     public override _init_(): void{
-        const plant = new PlantState(this.validator, this);
+        const plant = new PlantState(this.coordinator, this);
         const idle = new IdleState();
-        const stick = new StickState(this.validator, new PlayerMoving(this));
-        const edge = new EdgeState(this, this.validator);
-        const build = new BuildState(this.hitline, this.validator);
-        const runToSegment = new RunToSegmentState(this.validator, this)
+        const stick = new StickState(this.coordinator, new PlayerMoving(this));
+        const edge = new EdgeState(this, this.coordinator);
+        const build = new BuildState(this.hitline, this.coordinator);
+        const runToSegment = new RunToSegmentState(this.coordinator, this);
 
         this.stateMachine.addTransition(plant, idle, new FuncPredicate(()=> true))
         this.stateMachine.addTransition(idle, stick, new FuncPredicate(()=> this.isStickTime))

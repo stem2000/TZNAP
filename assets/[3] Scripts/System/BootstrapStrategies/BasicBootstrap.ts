@@ -8,7 +8,7 @@ import aBootableServiceComponent from "../aBootableServiceComponent";
 import aBootableService from "../aBootableService";
 import GameFlow from "../../Game/GameStates/GameFlow";
 import SegmentManager from "../../Game/Segment/SegmentManager";
-import PlayerValidator from "../../Game/PlayerValidator";
+import GameplayCoordinator from "../../Game/GameplayCoordinator";
 import aBootableComponent from "../aBootableComponent";
 
 const {ccclass, property} = cc._decorator;
@@ -50,7 +50,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
 
     private registerBootableServices(): aBootableService[]{
         let bootables = [
-            new PlayerValidator()
+            new GameplayCoordinator()
         ];
 
         bootables.forEach(bootable =>{

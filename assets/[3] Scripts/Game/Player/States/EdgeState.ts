@@ -1,13 +1,13 @@
 
 import { iState } from "../../../System/StateMachine/iState";
-import PlayerValidator from "../../PlayerValidator";
+import GameplayCoordinator from "../../GameplayCoordinator";
 import Player from "../Player";
 
 export default class EdgeState extends iState {
     player: Player;
-    validator: PlayerValidator;
+    validator: GameplayCoordinator;
 
-    public constructor(player: Player, validator: PlayerValidator){
+    public constructor(player: Player, validator: GameplayCoordinator){
         super();
         this.player = player;
         this.validator = validator;

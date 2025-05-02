@@ -8,11 +8,10 @@ import SegmentManager from "./Segment/SegmentManager";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PlayerValidator extends aBootableService{
-
+export default class GameplayCoordinator extends aBootableService{
     player: Player;
-    segmentManager: SegmentManager;
     lasthit_: number;
+    segmentManager: SegmentManager;
 
     public get lasthit(): number{
         return this.lasthit;
@@ -25,27 +24,22 @@ export default class PlayerValidator extends aBootableService{
 
     public _init_(): void {}
 
-    public GetProximateSegment(): Segment{
-        return this.segmentManager.getProximate();
-    }
-
-    public ValidateHit(hitlinePosition: cc.Vec2, hitlineLenght: number){
+    public ValidateHit(hitlinePosition: cc.Vec2, hitlineLenght: number): boolean{
         let nextSegment = this.segmentManager.getNextSegment();
         let segmentMargins = nextSegment.getMarginsVec2();
         
         this.lasthit_ = hitlinePosition.x + hitlineLenght;
-        cc.log(hitlinePosition.x, hitlineLenght, this.lasthit_, segmentMargins);
 
         if(this.lasthit_ >= segmentMargins.x && this.lasthit_ <= segmentMargins.y){
-            this.player.RunToSegment();
             this.segmentManager.swap();
+            return true;
         }
         else{
-            this.player.RunToFall();
+            return false;
         }
     }
 
-    public moveSegments(){
-        this.segmentManager.move();
+    public GetProximateSegment(): Segment{
+        return this.segmentManager.getProximate();
     }
 }

@@ -1,12 +1,12 @@
 import Hitline from "../Hitline";
-import PlayerValidator from "../PlayerValidator";
+import GameplayCoordinator from "../GameplayCoordinator";
 
 
 export default class HitlineBuilding {
     hitline: Hitline;
-    validator: PlayerValidator;
+    validator: GameplayCoordinator;
 
-    public constructor(hitline: Hitline, validator: PlayerValidator) {
+    public constructor(hitline: Hitline, validator: GameplayCoordinator) {
         this.hitline = hitline;
         this.validator = validator;
     }

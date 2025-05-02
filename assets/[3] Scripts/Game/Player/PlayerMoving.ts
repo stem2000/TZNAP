@@ -8,7 +8,7 @@ export default class PlayerMoving {
         this.player = player;
     }
 
-    public moveTo(position: cc.Vec3) {
+    public stickTo(position: cc.Vec3) {
         this.player.node.position = position;
     }
 }

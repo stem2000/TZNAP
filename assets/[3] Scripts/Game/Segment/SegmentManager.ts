@@ -12,7 +12,7 @@ export default class SegmentManager extends aBootableServiceComponent{
     public _init_(): void {}
     public _inject_(container: ServiceContainer): void {}
 
-    public addSegments(segments: Segment[]){}
+    protected addSegments(segments: Segment[]){}
 
     public getNextSegment(): Segment {
         cc.log("Should override super.getNext() on " + this);    

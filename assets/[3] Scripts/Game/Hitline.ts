@@ -2,7 +2,7 @@ import { ServiceContainer } from "../System/ServiceContainer";
 import aBootableServiceComponent from "../System/aBootableServiceComponent";
 import { GlobalEvent } from "./GlobalEvent";
 import Player from "./Player/Player";
-import PlayerValidator from "./PlayerValidator";
+import GameplayCoordinator from "./GameplayCoordinator";
 
 const {ccclass, property} = cc._decorator;
 
