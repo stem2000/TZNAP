@@ -5,7 +5,7 @@ import GameReloadState from "./GameReloadState";
 import GameEndState from "./GameEndState";
 import GameStartState from "./GameStartState";
 import FuncPredicate from "../../System/StateMachine/FuncPredicate";
-import { ServiceLocator } from "../../System/ServiceLocator";
+import { ServiceContainer } from "../../System/ServiceContainer";
 import GameWaitState from "./GameBootState";
 import GamePlayState from "./GamePlayState";
 import InputHandler from "../../System/InputHandler";
@@ -30,9 +30,6 @@ export default class GameFlow extends iBootableComponent {
     uiManager : UiManager
 
     public _init_(): void {
-        cc.systemEvent.on(GlobalEvent.StartButtonPressed, this.startGame, this);
-        cc.systemEvent.on(GlobalEvent.PlayerDied, () => {this.isGameStarted = false; this.isGameEnded = true, this});
-
         let gameWaitState = new GameWaitState();
         let gameStartState = new GameStartState(this.uiManager);
         let gamePlayState = new GamePlayState(this.uiManager);
@@ -45,15 +42,14 @@ export default class GameFlow extends iBootableComponent {
         this.stateMachine.setState(gameWaitState);
     }
 
-    public _inject_(): void {
-        let servloc = ServiceLocator.getGlobal();
+    public _inject_(container: ServiceContainer): void {
 
-        this.uiManager = servloc.get(UiManager);
-        this.segmentManager = servloc.get(SegmentManager);
-        this.player = servloc.get(Player);
+        this.uiManager = container.get(UiManager);
+        this.segmentManager = container.get(SegmentManager);
+        this.player = container.get(Player);
     }
 
-    public makeGameStartable(){
+    public confirmGameBoot(){
         this.isGameBooted = true;
     }
 
@@ -67,10 +63,4 @@ export default class GameFlow extends iBootableComponent {
         this.player.stickToSegment();
         this.segmentManager.move();
     }
-
-    protected onDestroy(): void {
-        cc.systemEvent.off(GlobalEvent.StartButtonPressed, this.startGame, this)
-        cc.systemEvent.off(GlobalEvent.PlayerDied, () => {this.isGameStarted = false; this.isGameEnded = true, this});
-    }
-
 }

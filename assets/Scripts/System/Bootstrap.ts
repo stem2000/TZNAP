@@ -1,5 +1,3 @@
-import PrefabStorage from "./PrefabStorage";
-import { ServiceLocator } from "./ServiceLocator";
 import BootstrapStrategy from "./BootstrapStrategies/BootstrapStrategy";
 
 const {ccclass, property} = cc._decorator;

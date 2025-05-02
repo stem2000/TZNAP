@@ -1,28 +1,17 @@
-import { IInjectable } from "../../Interfaces/Interfaces";
-import PrefabStorage from "../../System/PrefabStorage";
-import { ServiceLocator } from "../../System/ServiceLocator";
 import Segment from "./Segment";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class SegmentFactory implements IInjectable{
+export default class SegmentFactory{
 
     segmentPrefab: cc.Prefab;
     segmentCount: number = 3;
 
 
-    constructor() {
-        this._inject_();
+    constructor(segment: cc.Prefab) {
+        this.segmentPrefab = segment;
     }
-
-
-    _inject_(): void {
-        let servloc = ServiceLocator.getGlobal();
-
-        this.segmentPrefab = servloc.get(PrefabStorage).getPrefabLazy("Segment");
-    }
-
 
     createSegment(){
         return cc.instantiate(this.segmentPrefab).getComponent(Segment);

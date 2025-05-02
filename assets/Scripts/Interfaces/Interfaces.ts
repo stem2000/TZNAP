@@ -1,5 +1,7 @@
+import { ServiceContainer } from "../System/ServiceContainer";
+
 export interface IInjectable{
-    _inject_(): void;
+    _inject_(container: ServiceContainer): void;
 }
 
 export interface IBootable{

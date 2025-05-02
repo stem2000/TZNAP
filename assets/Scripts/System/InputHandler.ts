@@ -2,7 +2,7 @@ import { GlobalEvent } from "../Game/GlobalEvent";
 import SegmentManager from "../Game/Segment/SegmentManager";
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
 import iBootableComponent from "./iBootableComponent";
-import { ServiceLocator } from "./ServiceLocator";
+import { ServiceContainer } from "./ServiceContainer";
 import { StateMachine } from "./StateMachine/StateMachine";
 
 const {ccclass, property} = cc._decorator;
@@ -10,7 +10,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class InputHandler extends iBootableComponent{
 
-    _inject_(): void {}
+    _inject_(container: ServiceContainer): void {}
 
     _init_(): void {
         this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);

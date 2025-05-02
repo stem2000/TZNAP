@@ -1,4 +1,4 @@
-import { ServiceLocator } from "../System/ServiceLocator";
+import { ServiceContainer } from "../System/ServiceContainer";
 import iBootableComponent from "../System/iBootableComponent";
 import { GlobalEvent } from "./GlobalEvent";
 import Player from "./Player/Player";

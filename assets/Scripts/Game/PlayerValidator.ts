@@ -1,4 +1,4 @@
-import { ServiceLocator } from "../System/ServiceLocator";
+import { ServiceContainer } from "../System/ServiceContainer";
 import iBootable from "../System/iBootable";
 import iBootableComponent from "../System/iBootableComponent";
 import Player from "./Player/Player";
@@ -18,11 +18,9 @@ export default class PlayerValidator extends iBootable{
         return this.lasthit;
     }
 
-    public _inject_(): void {
-        let servloc = ServiceLocator.getGlobal();
-
-        this.segmentManager = servloc.get(SegmentManager);
-        this.player = servloc.get(Player);
+    public _inject_(container: ServiceContainer): void {
+        this.segmentManager = container.get(SegmentManager);
+        this.player = container.get(Player);
     }
 
     public _init_(): void {}

@@ -1,6 +1,6 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
 import iBootableComponent from "../System/iBootableComponent";
-import { ServiceLocator } from "../System/ServiceLocator";
+import { ServiceContainer } from "../System/ServiceContainer";
 
 const {ccclass, property} = cc._decorator;
 
@@ -10,7 +10,7 @@ export default class CameraBox extends iBootableComponent{
     private _camera: cc.Camera = null;
 
     
-    _inject_(): void {}
+    _inject_(container: ServiceContainer): void {}
     _init_(): void {
         this._camera = this.getComponent(cc.Camera);
     }

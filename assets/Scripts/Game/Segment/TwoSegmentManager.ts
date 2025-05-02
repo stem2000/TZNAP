@@ -1,9 +1,8 @@
 import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
-import { Constructor, ServiceLocator } from "../../System/ServiceLocator";
+import PrefabStorage from "../../System/PrefabStorage";
+import { Constructor, ServiceContainer } from "../../System/ServiceContainer";
 import CameraBox from "../CameraBox";
-import { GlobalEvent } from "../GlobalEvent";
 import Player from "../Player/Player";
-import PlayerValidator from "../PlayerValidator";
 import SegmentBuilder from "../SegmentBuilder";
 import Segment from "./Segment";
 import SegmentManager from "./SegmentManager";
@@ -11,18 +10,17 @@ import SegmentManager from "./SegmentManager";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class BasicSegmentManager extends SegmentManager implements IInjectable, IBootable{
+export default class TwoSegmentsManager extends SegmentManager implements IInjectable, IBootable{
     private segments: Segment[];
     private cameraBox: CameraBox;
     private segmentBuilder: SegmentBuilder;
     private player: Player;
 
-    public override _inject_(): void {
-        let servloc = ServiceLocator.getGlobal();
+    public override _inject_(container: ServiceContainer): void {
+        this.cameraBox = container.get(CameraBox);
+        this.player = container.get(Player);
         
-        this.cameraBox = servloc.get(CameraBox);
-        this.player = servloc.get(Player);
-
+        this.segmentBuilder = new SegmentBuilder(this.cameraBox, container.get(PrefabStorage));
     }
 
     public override get _ctor_(): Constructor {
@@ -30,8 +28,6 @@ export default class BasicSegmentManager extends SegmentManager implements IInje
     }
 
     public override _init_(): void{
-        this.segmentBuilder = new SegmentBuilder(this.cameraBox);
-
         this.segments = this.segmentBuilder.buildOneSegmentedLevel();
     }
 

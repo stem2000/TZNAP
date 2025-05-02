@@ -1,24 +1,23 @@
-import { IBootable, IInjectable } from "../Interfaces/Interfaces";
-import iBootable from "../System/iBootable";
-import { ServiceLocator } from "../System/ServiceLocator";
+import PrefabStorage from "../System/PrefabStorage";
+import { PrefabType } from "../System/PrefabType";
 import CameraBox from "./CameraBox";
 import { LevelType } from "./LevelType";
-import Player from "./Player/Player";
 import Segment from "./Segment/Segment";
 import SegmentFactory from "./Segment/SegmentFactory";
-import SegmentManager from "./Segment/SegmentManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class SegmentBuilder{
     cameraBox: CameraBox;
+    commonSegment: cc.Prefab;
 
-    public constructor(cameraBox: CameraBox){
+    public constructor(cameraBox: CameraBox, prefabStorage: PrefabStorage){
         this.cameraBox = cameraBox;
+        this.commonSegment = prefabStorage.getPrefabLazy(PrefabType.CommonSegment);
     }
 
-    getSegments(levelType: LevelType) : Segment[]{
+    getLevelSegments(levelType: LevelType) : Segment[]{
         switch(levelType){
             case LevelType.OneSegmented:{
                 let segments = this.buildOneSegmentedLevel();
@@ -32,7 +31,7 @@ export default class SegmentBuilder{
     }
 
     buildOneSegmentedLevel() : Segment[]{
-        let segments = this.createSegments();
+        let segments = this.createSegments(this.commonSegment);
 
         segments[0].moveQuick(new cc.Vec3(-segments[0].width / 2, this.cameraBox.bot, 0));
         segments[1].moveQuick(new cc.Vec3(this.cameraBox.right, this.cameraBox.bot, 0));
@@ -41,13 +40,13 @@ export default class SegmentBuilder{
     }
 
     buildTwoSegmentedLevel() : Segment[]{
-        let segments = this.createSegments();
+        let segments = this.createSegments(this.commonSegment);
 
         return segments;
     }
 
-    createSegments(): Segment[]{
-        let segments = new SegmentFactory().createSegments(2);
+    createSegments(segement: cc.Prefab): Segment[]{
+        let segments = new SegmentFactory(segement).createSegments(2);
 
         let scene = cc.director.getScene();
 

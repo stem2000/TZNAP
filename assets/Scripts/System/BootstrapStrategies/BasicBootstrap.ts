@@ -1,15 +1,12 @@
 import CameraBox from "../../Game/CameraBox";
-import { GlobalEvent } from "../../Game/GlobalEvent";
 import Player from "../../Game/Player/Player";
-import SegmentMover from "../../Game/Segment/SegmentManager";
 import PrefabStorage from "../PrefabStorage";
-import { Constructor, ServiceLocator } from "../ServiceLocator";
+import { Constructor, ServiceContainer } from "../ServiceContainer";
 import InputHandler from "../InputHandler";
 import BootstrapStrategy from "./BootstrapStrategy";
 import iBootableComponent from "../iBootableComponent";
 import iBootable from "../iBootable";
 import GameFlow from "../../Game/GameStates/GameFlow";
-import BasicSegmentManager from "../../Game/Segment/BasicSegmentManager";
 import SegmentManager from "../../Game/Segment/SegmentManager";
 import PlayerValidator from "../../Game/PlayerValidator";
 
@@ -17,6 +14,7 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass()
 export default class BasicBootstrap extends BootstrapStrategy {
+    private serviceContainer: ServiceContainer;
 
     initSequence: Function[] = [
         CameraBox,
@@ -28,7 +26,14 @@ export default class BasicBootstrap extends BootstrapStrategy {
     ]
 
     public override Boot() {
-        
+        this.createServiceContainer();
+        this.resolveBootables();
+        this.configureCC();
+
+        this.serviceContainer.get(GameFlow).confirmGameBoot();
+    }
+
+    private resolveBootables(){
         let bootables = this.registerBootables();
         let bootableComponents = this.registerBootableComponents(this.getBootables());
         
@@ -37,31 +42,25 @@ export default class BasicBootstrap extends BootstrapStrategy {
         
         this.initializeBootables(bootables);
         this.initializeBootableComponents(bootableComponents);
-
-        this.configureCC();
-
-        ServiceLocator.getGlobal().get(GameFlow).makeGameStartable();
     }
 
     private registerBootables(): iBootable[]{
-        let servloc = ServiceLocator.getGlobal();
         let bootables = [
             new PlayerValidator()
         ];
 
         bootables.forEach(bootable =>{
-            servloc.register(bootable.constructor as Constructor, bootable);
+            this.serviceContainer.register(bootable.constructor as Constructor, bootable);
         })
 
         return bootables;
     }
 
     private registerBootableComponents(bootables : iBootableComponent[]): iBootableComponent[]{
-        let servloc = ServiceLocator.getGlobal();
         let bootableComponents = bootables;
 
         bootableComponents.forEach(component => {
-            servloc.register(component._ctor_, component);
+            this.serviceContainer.register(component._ctor_, component);
         });
 
         return bootableComponents;
@@ -69,7 +68,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
 
     private injectInBootables(bootables : iBootable[]): iBootable[]{
         bootables.forEach(bootable => {
-            bootable._inject_();
+            bootable._inject_(this.serviceContainer);
         });
 
         return bootables;
@@ -92,7 +91,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
 
     private injectInBootableComponents(bootableComponents : iBootableComponent[]): iBootableComponent[]{
         bootableComponents.forEach(component => {
-            component._inject_();
+            component._inject_(this.serviceContainer);
         });
 
         return bootableComponents;
@@ -118,8 +117,11 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootableComponents;
     }
 
-
     private configureCC(){       
         cc.debug.setDisplayStats(true);
+    }
+
+    private createServiceContainer(){
+        this.serviceContainer = new ServiceContainer();
     }
 }

@@ -1,5 +1,5 @@
 import { IInjectable } from "../../Interfaces/Interfaces";
-import { ServiceLocator } from "../../System/ServiceLocator";
+import { ServiceContainer } from "../../System/ServiceContainer";
 import { iState } from "../../System/StateMachine/iState";
 import { GlobalEvent } from "../GlobalEvent";
 

@@ -1,15 +1,9 @@
-import { IInjectable } from "../../Interfaces/Interfaces";
 import iBootableComponent from "../../System/iBootableComponent";
-import InputHandler from "../../System/InputHandler";
-import { Constructor, ServiceLocator } from "../../System/ServiceLocator";
+import { Constructor, ServiceContainer } from "../../System/ServiceContainer";
 import FuncPredicate from "../../System/StateMachine/FuncPredicate";
-import { iPredicate } from "../../System/StateMachine/iPredicate";
 import { StateMachine } from "../../System/StateMachine/StateMachine";
-import { GlobalEvent } from "../GlobalEvent";
 import Hitline from "../Hitline";
 import PlayerValidator from "../PlayerValidator";
-import Segment from "../Segment/Segment";
-import HitlineBuilding from "./HitlineBuilding";
 import PlayerMoving from "./PlayerMoving";
 import BuildState from "./States/BuildState";
 import EdgeState from "./States/EdgeState";
@@ -35,10 +29,8 @@ export default class Player extends iBootableComponent{
     isRunToSegmentTime: boolean = false;
     isRunToFallTime: boolean = false;
     
-    public override _inject_(): void {
-        let servloc = ServiceLocator.getGlobal();
-
-        this.validator = servloc.get(PlayerValidator);
+    public override _inject_(container: ServiceContainer): void {
+        this.validator = container.get(PlayerValidator);
     }
 
     public override _init_(): void{
