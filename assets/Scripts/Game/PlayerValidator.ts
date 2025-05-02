@@ -1,6 +1,6 @@
 import { ServiceContainer } from "../System/ServiceContainer";
-import iBootable from "../System/iBootable";
-import iBootableComponent from "../System/iBootableComponent";
+import aBootableService from "../System/aBootableService";
+import aBootableServiceComponent from "../System/aBootableServiceComponent";
 import Player from "./Player/Player";
 import Segment from "./Segment/Segment";
 import SegmentManager from "./Segment/SegmentManager";
@@ -8,7 +8,7 @@ import SegmentManager from "./Segment/SegmentManager";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PlayerValidator extends iBootable{
+export default class PlayerValidator extends aBootableService{
 
     player: Player;
     segmentManager: SegmentManager;

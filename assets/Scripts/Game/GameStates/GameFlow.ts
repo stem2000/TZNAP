@@ -1,4 +1,4 @@
-import iBootableComponent from "../../System/iBootableComponent";
+import aBootableServiceComponent from "../../System/aBootableServiceComponent";
 import { StateMachine } from "../../System/StateMachine/StateMachine";
 import { GlobalEvent } from "../GlobalEvent";
 import GameReloadState from "./GameReloadState";
@@ -16,7 +16,7 @@ import SegmentManager from "../Segment/SegmentManager";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class GameFlow extends iBootableComponent {
+export default class GameFlow extends aBootableServiceComponent {
     stateMachine : StateMachine = new StateMachine();
     segmentManager: SegmentManager;
     player: Player;
@@ -29,7 +29,7 @@ export default class GameFlow extends iBootableComponent {
     inputHandler : InputHandler;
     uiManager : UiManager
 
-    public _init_(): void {
+    public override _init_(): void {
         let gameWaitState = new GameWaitState();
         let gameStartState = new GameStartState(this.uiManager);
         let gamePlayState = new GamePlayState(this.uiManager);
@@ -42,7 +42,7 @@ export default class GameFlow extends iBootableComponent {
         this.stateMachine.setState(gameWaitState);
     }
 
-    public _inject_(container: ServiceContainer): void {
+    public override _inject_(container: ServiceContainer): void {
 
         this.uiManager = container.get(UiManager);
         this.segmentManager = container.get(SegmentManager);
@@ -51,6 +51,10 @@ export default class GameFlow extends iBootableComponent {
 
     public confirmGameBoot(){
         this.isGameBooted = true;
+    }
+
+    public confirmGameStart(){
+        this.isGameStarted = true;
     }
 
     protected update(dt: number): void {

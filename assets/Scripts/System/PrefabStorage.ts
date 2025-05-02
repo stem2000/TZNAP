@@ -1,6 +1,6 @@
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
-import iBootable from "./iBootable";
-import iBootableComponent from "./iBootableComponent";
+import aBootableService from "./aBootableService";
+import aBootableServiceComponent from "./aBootableServiceComponent";
 import PrefabContainer from "./PrefabContainer";
 import { PrefabType } from "./PrefabType";
 import { ServiceContainer } from "./ServiceContainer";
@@ -8,7 +8,7 @@ import { ServiceContainer } from "./ServiceContainer";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PrefabStorage extends iBootableComponent{
+export default class PrefabStorage extends aBootableServiceComponent{
     @property([PrefabContainer])
     private containers: PrefabContainer[] = [];
 

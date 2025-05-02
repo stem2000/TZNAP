@@ -1,4 +1,4 @@
-import iBootableComponent from "../../System/iBootableComponent";
+import aBootableServiceComponent from "../../System/aBootableServiceComponent";
 import { Constructor, ServiceContainer } from "../../System/ServiceContainer";
 import FuncPredicate from "../../System/StateMachine/FuncPredicate";
 import { StateMachine } from "../../System/StateMachine/StateMachine";
@@ -15,7 +15,7 @@ import StickState from "./States/StickState";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class Player extends iBootableComponent{
+export default class Player extends aBootableServiceComponent{
 
     @property(Hitline)
     hitline: Hitline = null;

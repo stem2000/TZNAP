@@ -1,10 +1,11 @@
-import ReloadButton from "../UI/ReloadButton";
-import iBootableComponent from "./iBootableComponent";
+import GameFlow from "../Game/GameStates/GameFlow";
+import { ServiceContainer } from "./ServiceContainer";
+import aBootableServiceComponent from "./aBootableServiceComponent";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class UiManager extends iBootableComponent {
+export default class UiManager extends aBootableServiceComponent {
 
     @property(cc.Node)
     startScreen: cc.Node = null;
@@ -15,10 +16,14 @@ export default class UiManager extends iBootableComponent {
     @property(cc.Node)
     endScreen: cc.Node = null;
 
+    private gameFlow: GameFlow;
 
-    _inject_(): void {}
 
-    _init_(): void {}
+    override _inject_(container: ServiceContainer): void {
+        this.gameFlow = container.get(GameFlow);
+    }
+
+    override _init_(): void {}
 
 
     public OpenStartScreen(){

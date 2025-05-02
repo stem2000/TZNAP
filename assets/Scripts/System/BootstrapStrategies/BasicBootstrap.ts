@@ -4,11 +4,12 @@ import PrefabStorage from "../PrefabStorage";
 import { Constructor, ServiceContainer } from "../ServiceContainer";
 import InputHandler from "../InputHandler";
 import BootstrapStrategy from "./BootstrapStrategy";
-import iBootableComponent from "../iBootableComponent";
-import iBootable from "../iBootable";
+import aBootableServiceComponent from "../aBootableServiceComponent";
+import aBootableService from "../aBootableService";
 import GameFlow from "../../Game/GameStates/GameFlow";
 import SegmentManager from "../../Game/Segment/SegmentManager";
 import PlayerValidator from "../../Game/PlayerValidator";
+import aBootableComponent from "../aBootableComponent";
 
 const {ccclass, property} = cc._decorator;
 
@@ -34,17 +35,20 @@ export default class BasicBootstrap extends BootstrapStrategy {
     }
 
     private resolveBootables(){
-        let bootables = this.registerBootables();
-        let bootableComponents = this.registerBootableComponents(this.getBootables());
+        let bootableServices = this.registerBootableServices();
+        let bootableServiceComponents = this.registerBootableServiceComponents(this.getBootableServiceComponentsOnScene());
+
+        let bootableComponents = this.getBootableComponentsOnScene();
         
-        this.injectInBootables(bootables);
+        this.injectInBootableServices(bootableServices);
+        this.injectInBootableServiceComponents(bootableServiceComponents);
         this.injectInBootableComponents(bootableComponents);
         
-        this.initializeBootables(bootables);
-        this.initializeBootableComponents(bootableComponents);
+        this.initializeBootableServices(bootableServices);
+        this.initializeBootableServiceComponents(bootableServiceComponents);
     }
 
-    private registerBootables(): iBootable[]{
+    private registerBootableServices(): aBootableService[]{
         let bootables = [
             new PlayerValidator()
         ];
@@ -56,7 +60,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private registerBootableComponents(bootables : iBootableComponent[]): iBootableComponent[]{
+    private registerBootableServiceComponents(bootables : aBootableServiceComponent[]): aBootableServiceComponent[]{
         let bootableComponents = bootables;
 
         bootableComponents.forEach(component => {
@@ -66,22 +70,29 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootableComponents;
     }
 
-    private injectInBootables(bootables : iBootable[]): iBootable[]{
-        bootables.forEach(bootable => {
-            bootable._inject_(this.serviceContainer);
+    private getBootableServiceComponentsOnScene(): aBootableServiceComponent[]{
+        let bootableServiceComponents = [];
+
+        this.node.children.forEach(child => {
+                let bootables = child.getComponentsInChildren(cc.Component);
+                
+                bootables.forEach(bootable => {
+                    if(bootable instanceof aBootableServiceComponent)
+                        bootableServiceComponents.push(bootable);
+            });
         });
 
-        return bootables;
+        return bootableServiceComponents;
     }
 
-    private getBootables(): iBootableComponent[]{
+    private getBootableComponentsOnScene(): aBootableComponent[]{
         let bootableComponents = [];
 
         this.node.children.forEach(child => {
                 let bootables = child.getComponentsInChildren(cc.Component);
                 
                 bootables.forEach(bootable => {
-                    if(bootable instanceof iBootableComponent)
+                    if(bootable instanceof aBootableComponent)
                         bootableComponents.push(bootable);
             });
         });
@@ -89,7 +100,15 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootableComponents;
     }
 
-    private injectInBootableComponents(bootableComponents : iBootableComponent[]): iBootableComponent[]{
+    private injectInBootableServices(bootables : aBootableService[]): aBootableService[]{
+        bootables.forEach(bootable => {
+            bootable._inject_(this.serviceContainer);
+        });
+
+        return bootables;
+    }
+
+    private injectInBootableServiceComponents(bootableComponents : aBootableServiceComponent[]): aBootableServiceComponent[]{
         bootableComponents.forEach(component => {
             component._inject_(this.serviceContainer);
         });
@@ -97,7 +116,15 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootableComponents;
     }
 
-    private initializeBootables(bootables : iBootable[]): iBootable[] {
+    private injectInBootableComponents(bootables : aBootableComponent[]): aBootableComponent[]{
+        bootables.forEach(bootable => {
+            bootable._inject_(this.serviceContainer);
+        });
+
+        return bootables;
+    }
+
+    private initializeBootableServices(bootables : aBootableService[]): aBootableService[] {
         bootables.forEach(bootable => {
             bootable._init_();
         });
@@ -105,7 +132,7 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private initializeBootableComponents(bootableComponents : iBootableComponent[]): iBootableComponent[]{
+    private initializeBootableServiceComponents(bootableComponents : aBootableServiceComponent[]): aBootableServiceComponent[]{
 
         this.initSequence.forEach((ComponentType) => {
             const bootable = bootableComponents.find(c => c instanceof ComponentType);

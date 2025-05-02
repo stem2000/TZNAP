@@ -4,7 +4,7 @@ import { ServiceContainer } from "./ServiceContainer";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class iBootable implements IBootable, IInjectable{
+export default abstract class aBootableService implements IBootable, IInjectable{
     constructor(){}
     _inject_(container: ServiceContainer): void {}
     _init_(): void {}

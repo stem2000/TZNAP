@@ -1,5 +1,5 @@
 import { ServiceContainer } from "../System/ServiceContainer";
-import iBootableComponent from "../System/iBootableComponent";
+import aBootableServiceComponent from "../System/aBootableServiceComponent";
 import { GlobalEvent } from "./GlobalEvent";
 import Player from "./Player/Player";
 import PlayerValidator from "./PlayerValidator";

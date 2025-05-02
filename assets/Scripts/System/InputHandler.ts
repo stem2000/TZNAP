@@ -1,14 +1,14 @@
 import { GlobalEvent } from "../Game/GlobalEvent";
 import SegmentManager from "../Game/Segment/SegmentManager";
 import { IBootable, IInjectable } from "../Interfaces/Interfaces";
-import iBootableComponent from "./iBootableComponent";
+import aBootableServiceComponent from "./aBootableServiceComponent";
 import { ServiceContainer } from "./ServiceContainer";
 import { StateMachine } from "./StateMachine/StateMachine";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class InputHandler extends iBootableComponent{
+export default class InputHandler extends aBootableServiceComponent{
 
     _inject_(container: ServiceContainer): void {}
 
