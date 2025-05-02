@@ -16,18 +16,18 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Player extends aBootableServiceComponent{
-
-    @property(Hitline)
-    hitline: Hitline = null;
-
     stateMachine : StateMachine = new StateMachine();
-    validator: PlayerValidator;
 
     isStickTime: boolean = false;
     isEdgeTime: boolean = false;
     isBuildTime: boolean = false;
     isRunToSegmentTime: boolean = false;
     isRunToFallTime: boolean = false;
+
+    @property(Hitline)
+    hitline: Hitline = null;
+    
+    validator: PlayerValidator;
     
     public override _inject_(container: ServiceContainer): void {
         this.validator = container.get(PlayerValidator);

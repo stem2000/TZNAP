@@ -18,8 +18,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class GameFlow extends aBootableServiceComponent {
     stateMachine : StateMachine = new StateMachine();
-    segmentManager: SegmentManager;
-    player: Player;
 
     isGameBooted: boolean;
     isGameStarted: boolean;
@@ -27,12 +25,14 @@ export default class GameFlow extends aBootableServiceComponent {
     isGameReloaded: boolean;
 
     inputHandler : InputHandler;
+    segmentManager: SegmentManager;
     uiManager : UiManager
+    player: Player;
 
     public override _init_(): void {
         let gameWaitState = new GameWaitState();
         let gameStartState = new GameStartState(this.uiManager);
-        let gamePlayState = new GamePlayState(this.uiManager);
+        let gamePlayState = new GamePlayState(this.uiManager, this.segmentManager, this.player);
         let gameEndState = new GameEndState(this.uiManager);
         let gameReloadState = new GameReloadState();
         
@@ -59,12 +59,5 @@ export default class GameFlow extends aBootableServiceComponent {
 
     protected update(dt: number): void {
         this.stateMachine.update();
-    }
-
-    private startGame(){
-        this.isGameStarted = true;
-
-        this.player.stickToSegment();
-        this.segmentManager.move();
     }
 }
