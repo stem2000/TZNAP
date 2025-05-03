@@ -1,7 +1,7 @@
 import Player from "./Player";
 
 
-export default class PlayerMoving {
+export default class PlayerMover {
     player: Player;
 
     public constructor(player: Player) {

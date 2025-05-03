@@ -1,9 +1,9 @@
 import { ServiceContainer } from "../System/ServiceContainer";
 import aBootableService from "../System/aBootableService";
-import aBootableServiceComponent from "../System/aBootableServiceComponent";
 import Player from "./Player/Player";
 import Segment from "./Segment/Segment";
 import SegmentManager from "./Segment/SegmentManager";
+import Request from "../System/Request";
 
 const {ccclass, property} = cc._decorator;
 
@@ -12,6 +12,8 @@ export default class GameplayCoordinator extends aBootableService{
     player: Player;
     lasthit_: number;
     segmentManager: SegmentManager;
+
+    proximateSegmentRequest: Request<[], Segment>;
 
     public get lasthit(): number{
         return this.lasthit;
@@ -39,7 +41,14 @@ export default class GameplayCoordinator extends aBootableService{
         }
     }
 
-    public GetProximateSegment(): Segment{
-        return this.segmentManager.getProximate();
+    public GetProximateRequestLazy(): Request<[], Segment>{
+        if(this.proximateSegmentRequest){
+            return this.proximateSegmentRequest;
+        }
+        else {
+            this.proximateSegmentRequest = new Request<[], Segment>((): Segment => { return this.segmentManager.getProximate(); });
+
+            return this.proximateSegmentRequest;
+        }
     }
 }

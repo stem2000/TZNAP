@@ -2,17 +2,18 @@ import { iState } from "../../../System/StateMachine/iState";
 import Hitline from "../../Hitline";
 import GameplayCoordinator from "../../GameplayCoordinator";
 import Player from "../Player";
+import Segment from "../../Segment/Segment";
+import Request from "../../../System/Request";
 
 export default class BuildState extends iState {
     hitline: Hitline;
     player: Player;
-    validator: GameplayCoordinator;
+    proximateRequest: Request<[], Segment>;
 
-    public constructor(hitline: Hitline, validator: GameplayCoordinator){
+    public constructor(hitline: Hitline){
         super();
 
         this.hitline = hitline;
-        this.validator = validator;
     }
 
     public override onEnter(): void {}
@@ -26,11 +27,11 @@ export default class BuildState extends iState {
     }
 
     private stopBuilding(){
-        let hitlineWorldPosition = this.hitline.node.convertToWorldSpaceAR(new cc.Vec2(0, 0));
+        // let hitlineWorldPosition = this.hitline.node.convertToWorldSpaceAR(new cc.Vec2(0, 0));
 
-        this.hitline.stopGrowing();
-        this.hitline.fall(()=>{
-            this.validator.ValidateHit(hitlineWorldPosition, this.hitline.lenght);})
+        // this.hitline.stopGrowing();
+        // this.hitline.fall(()=>{
+        //     this.validator.ValidateHit(hitlineWorldPosition, this.hitline.lenght);})
         
     }
 }

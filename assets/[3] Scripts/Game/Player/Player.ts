@@ -5,13 +5,17 @@ import { StateMachine } from "../../System/StateMachine/StateMachine";
 import Hitline from "../Hitline";
 import GameplayCoordinator from "../GameplayCoordinator";
 import SegmentManager from "../Segment/SegmentManager";
-import PlayerMoving from "./PlayerMoving";
+import PlayerMover from "./PlayerMover";
 import BuildState from "./States/BuildState";
 import EdgeState from "./States/EdgeState";
 import IdleState from "./States/IdleState";
 import PlantState from "./States/PlantState";
 import RunToSegmentState from "./States/RunToSegmentState";
 import StickState from "./States/StickState";
+import Event from "../../System/Event";
+import Request from "../../System/Request";
+import Segment from "../Segment/Segment";
+
 
 const {ccclass, property} = cc._decorator;
 
@@ -28,19 +32,22 @@ export default class Player extends aBootableServiceComponent{
     @property(Hitline)
     hitline: Hitline = null;
 
-    coordinator: GameplayCoordinator;
+    onStickedEvent: Event;
+    proximateRequest: Request<[], Segment>;
     
     public override _inject_(container: ServiceContainer): void {
-        this.coordinator = container.get(GameplayCoordinator);
+        var gameCoordinator = container.get(GameplayCoordinator);
+
+        this.proximateRequest = gameCoordinator.GetProximateRequestLazy();
     }
 
     public override _init_(): void{
-        const plant = new PlantState(this.coordinator, this);
+        const plant = new PlantState(this.proximateRequest, this);
         const idle = new IdleState();
-        const stick = new StickState(this.coordinator, new PlayerMoving(this));
-        const edge = new EdgeState(this, this.coordinator);
-        const build = new BuildState(this.hitline, this.coordinator);
-        const runToSegment = new RunToSegmentState(this.coordinator, this);
+        const stick = new StickState(new PlayerMover(this), this.onStickedEvent, this.proximateRequest);
+        const edge = new EdgeState(this, this.proximateRequest);
+        const build = new BuildState(this.hitline);
+        const runToSegment = new RunToSegmentState(this);
 
         this.stateMachine.addTransition(plant, idle, new FuncPredicate(()=> true))
         this.stateMachine.addTransition(idle, stick, new FuncPredicate(()=> this.isStickTime))
@@ -49,6 +56,8 @@ export default class Player extends aBootableServiceComponent{
         this.stateMachine.addTransition(build, runToSegment, new FuncPredicate(()=> this.isRunToSegmentTime))
 
         this.stateMachine.setState(plant);
+
+        this.onStickedEvent = new Event();
     }
 
     protected update(dt: number): void {
@@ -77,6 +86,14 @@ export default class Player extends aBootableServiceComponent{
 
     public stickToSegment(){
         this.isStickTime = true;
+    }
+
+    public SubsctiveToOnStickedEvent(subsriber: Function){
+        this.onStickedEvent.Subscribe(subsriber);
+    }
+
+    public UnsubscribeFromOnStickedEvent(subsriber: Function){
+        this.onStickedEvent.Unsubscribe(subsriber);
     }
 }
 

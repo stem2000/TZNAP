@@ -1,30 +1,37 @@
 import { iState } from "../../../System/StateMachine/iState";
 import GameplayCoordinator from "../../GameplayCoordinator";
-import Segment from "../../Segment/Segment";
-import Player from "../Player";
-import PlayerMoving from "../PlayerMoving";
+import Segment from "../../Segment/Segment";8
+import PlayerMover from "../PlayerMover";
+import Event from "../../../System/Event";
+import Request from "../../../System/Request";
 
 export default class StickState extends iState {
-    moving: PlayerMoving;
-    coordinator: GameplayCoordinator;
-    stickSegment: Segment;
+    mover: PlayerMover;
+    stickedSegment: Segment;
 
-    public constructor(coordinator: GameplayCoordinator, moving: PlayerMoving){
+    onStickedEvent: Event;
+
+    proximateRequest: Request<[], Segment>;
+
+    public constructor(mover: PlayerMover, onStickedEvent: Event, proximateRequest: Request<[], Segment>){
         super();
 
-        this.coordinator = coordinator;
-        this.moving = moving;
+        this.mover = mover;
+
+        this.onStickedEvent = onStickedEvent;
+
+        this.proximateRequest = proximateRequest;
     }
 
     public override onEnter(): void {
-        this.stickSegment = this.coordinator.GetProximateSegment();
+        this.stickedSegment = this.proximateRequest.GetRequested();
     };
 
     public override onExit(): void {};
 
     public override update(): void {
-        let target = this.stickSegment.getRightEnd();
+        let target = this.stickedSegment.getRightEnd();
 
-        this.moving.stickTo(new cc.Vec3(target.x, target.y, 0));
+        this.mover.stickTo(new cc.Vec3(target.x, target.y, 0));
     }
 }
