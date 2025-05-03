@@ -9,22 +9,22 @@ export default class StickState extends iState {
     mover: PlayerMover;
     stickedSegment: Segment;
 
-    onStickedEvent: Event;
+    eventOnSticked: Event;
 
-    proximateRequest: Request<[], Segment>;
+    requestProximate: Request<[], Segment>;
 
-    public constructor(mover: PlayerMover, onStickedEvent: Event, proximateRequest: Request<[], Segment>){
+    public constructor(mover: PlayerMover, onStickedEvent: Event, requestProximate: Request<[], Segment>){
         super();
 
         this.mover = mover;
 
-        this.onStickedEvent = onStickedEvent;
+        this.eventOnSticked = onStickedEvent;
 
-        this.proximateRequest = proximateRequest;
+        this.requestProximate = requestProximate;
     }
 
     public override onEnter(): void {
-        this.stickedSegment = this.proximateRequest.GetRequested();
+        this.stickedSegment = this.requestProximate.Request();
     };
 
     public override onExit(): void {};

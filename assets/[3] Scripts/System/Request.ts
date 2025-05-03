@@ -7,7 +7,7 @@ export default class Request<TArgs extends any[], TResult>{
         this.function = func;
     }
 
-    public GetRequested(...args: TArgs): TResult{
+    public Request(...args: TArgs): TResult{
         return this.function(...args);
     }
 }

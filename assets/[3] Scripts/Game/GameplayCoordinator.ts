@@ -10,14 +10,9 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class GameplayCoordinator extends aBootableService{
     player: Player;
-    lasthit_: number;
     segmentManager: SegmentManager;
 
-    proximateSegmentRequest: Request<[], Segment>;
-
-    public get lasthit(): number{
-        return this.lasthit;
-    }
+    lasthit: number;
 
     public _inject_(container: ServiceContainer): void {
         this.segmentManager = container.get(SegmentManager);
@@ -26,29 +21,26 @@ export default class GameplayCoordinator extends aBootableService{
 
     public _init_(): void {}
 
-    public ValidateHit(hitlinePosition: cc.Vec2, hitlineLenght: number): boolean{
+    public ValidateHit(hitlinePosition: cc.Vec2, hitlineLenght: number){
         let nextSegment = this.segmentManager.getNextSegment();
         let segmentMargins = nextSegment.getMarginsVec2();
         
-        this.lasthit_ = hitlinePosition.x + hitlineLenght;
+        this.lasthit = hitlinePosition.x + hitlineLenght;
 
-        if(this.lasthit_ >= segmentMargins.x && this.lasthit_ <= segmentMargins.y){
+        if(this.lasthit >= segmentMargins.x && this.lasthit <= segmentMargins.y){
             this.segmentManager.swap();
-            return true;
+            this.player.run();
         }
         else{
-            return false;
+            this.player.run();
         }
     }
 
-    public GetProximateRequestLazy(): Request<[], Segment>{
-        if(this.proximateSegmentRequest){
-            return this.proximateSegmentRequest;
-        }
-        else {
-            this.proximateSegmentRequest = new Request<[], Segment>((): Segment => { return this.segmentManager.getProximate(); });
+    public GetProximateSegment(): Segment {
+        return this.segmentManager.getProximate();
+    }
 
-            return this.proximateSegmentRequest;
-        }
+    public GetLasthit(): number {
+        return this.lasthit;
     }
 }

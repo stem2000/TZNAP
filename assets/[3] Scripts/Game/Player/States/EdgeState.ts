@@ -1,30 +1,31 @@
 import { iState } from "../../../System/StateMachine/iState";
 import Segment from "../../Segment/Segment";
 import Request from "../../../System/Request";
-import Player from "../Player";
 
 
 export default class EdgeState extends iState {
-    player: Player;
-    proximateRequest: Request<[], Segment>;
+    playerNode: cc.Node;
+    requestProximate: Request<[], Segment>;
+    requestUnlockBuilding: Request<[], void>;
 
-    public constructor(player: Player, proximateRequest: Request<[], Segment>){
+    public constructor(requestUnlockBuilding: Request<[],void>, requestProximate: Request<[], Segment>, playerNode: cc.Node){
         super();
 
-        this.player = player;
-        this.proximateRequest = proximateRequest;
+        this.requestUnlockBuilding = requestUnlockBuilding;
+        this.requestProximate = requestProximate;
+        this.playerNode = playerNode;
     }
 
     public override onEnter(): void {
-        let edgePosition = this.proximateRequest.GetRequested().getRightEnd();
+        let edgePosition = this.requestProximate.Request().getRightEnd();
    
-        if(cc.Vec3.distance(this.player.node.position, new cc.Vec3(edgePosition.x, edgePosition.y, 0)) > 0.3){
-            cc.tween(this.player.node).to(0.3, { position: new cc.Vec3(edgePosition.x, edgePosition.y, 0) }).call(() => {
-                this.player.unlockBuilding();
+        if(cc.Vec3.distance(this.playerNode.position, new cc.Vec3(edgePosition.x, edgePosition.y, 0)) > 0.3){
+            cc.tween(this.playerNode).to(0.3, { position: new cc.Vec3(edgePosition.x, edgePosition.y, 0) }).call(() => {
+                this.requestUnlockBuilding.Request();
             }).start();
         }
         else{
-            this.player.unlockBuilding();
+            this.requestUnlockBuilding.Request();
         }
     };
 

@@ -8,7 +8,7 @@ import FuncPredicate from "../../System/StateMachine/FuncPredicate";
 import { ServiceContainer } from "../../System/ServiceContainer";
 import GameWaitState from "./GameBootState";
 import GamePlayState from "./GamePlayState";
-import InputHandler from "../../System/InputHandler";
+import GameInput from "../../System/GameInput";
 import UiManager from "../../System/UiManager";
 import Player from "../Player/Player";
 import SegmentManager from "../Segment/SegmentManager";
@@ -24,7 +24,7 @@ export default class GameFlow extends aBootableServiceComponent {
     isGameEnded: boolean;
     isGameReloaded: boolean;
 
-    inputHandler : InputHandler;
+    inputHandler : GameInput;
     segmentManager: SegmentManager;
     uiManager : UiManager
     player: Player;

@@ -2,7 +2,6 @@ import CameraBox from "../../Game/CameraBox";
 import Player from "../../Game/Player/Player";
 import PrefabStorage from "../PrefabStorage";
 import { Constructor, ServiceContainer } from "../ServiceContainer";
-import InputHandler from "../InputHandler";
 import BootstrapStrategy from "./BootstrapStrategy";
 import aBootableServiceComponent from "../aBootableServiceComponent";
 import aBootableService from "../aBootableService";
@@ -10,6 +9,7 @@ import GameFlow from "../../Game/GameStates/GameFlow";
 import SegmentManager from "../../Game/Segment/SegmentManager";
 import GameplayCoordinator from "../../Game/GameplayCoordinator";
 import aBootableComponent from "../aBootableComponent";
+import GameInput from "../GameInput";
 
 const {ccclass, property} = cc._decorator;
 
@@ -21,7 +21,8 @@ export default class BasicBootstrap extends BootstrapStrategy {
         CameraBox,
         SegmentManager,
         PrefabStorage,
-        InputHandler,
+        GameInput,
+        GameplayCoordinator,
         Player, 
         GameFlow
     ]

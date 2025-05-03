@@ -1,24 +1,38 @@
 import { iState } from "../../../System/StateMachine/iState";
 import Hitline from "../../Hitline";
-import GameplayCoordinator from "../../GameplayCoordinator";
-import Player from "../Player";
-import Segment from "../../Segment/Segment";
 import Request from "../../../System/Request";
+import GameInput from "../../../System/GameInput";
 
 export default class BuildState extends iState {
     hitline: Hitline;
-    player: Player;
-    proximateRequest: Request<[], Segment>;
+    input: GameInput;
 
-    public constructor(hitline: Hitline){
+    requestValidate: Request<[cc.Vec2, number], void>;
+
+    boundStartBuilding: Function;
+    boundStopBuilding: Function;
+
+    public constructor(hitline: Hitline, requestValidate: Request<[cc.Vec2, number], void>, input: GameInput){
         super();
 
         this.hitline = hitline;
+        this.input = input;
+
+        this.requestValidate = requestValidate;
+
+        this.boundStartBuilding = this.startBuilding.bind(this);
+        this.boundStopBuilding = this.stopBuilding.bind(this);
     }
 
-    public override onEnter(): void {}
+    public override onEnter(): void {
+        this.input.subcribeToOnTouchStart(this.boundStartBuilding);
+        this.input.subcribeToOnTouchEnd(this.boundStopBuilding);
+    }
 
-    public override onExit(): void {}
+    public override onExit(): void {
+        this.input.unsubcribeFromOnTouchStart(this.boundStartBuilding);
+        this.input.unsubscribeFromOnTouchEnd(this.boundStopBuilding);
+    }
 
     public override update(): void {}
 
@@ -27,11 +41,11 @@ export default class BuildState extends iState {
     }
 
     private stopBuilding(){
-        // let hitlineWorldPosition = this.hitline.node.convertToWorldSpaceAR(new cc.Vec2(0, 0));
+        let hitlineWorldPosition = this.hitline.node.convertToWorldSpaceAR(new cc.Vec2(0, 0));
 
-        // this.hitline.stopGrowing();
-        // this.hitline.fall(()=>{
-        //     this.validator.ValidateHit(hitlineWorldPosition, this.hitline.lenght);})
+        this.hitline.stopGrowing();
+        this.hitline.fall(()=>{
+            this.requestValidate.Request(hitlineWorldPosition, this.hitline.lenght);})
         
     }
 }
