@@ -41,8 +41,6 @@ export class StateMachine {
         this.current?.state.onExit();
         nextNode.state.onEnter();
         this.current = nextNode;
-
-        cc.log("State Machine - changeState :" + this.current.state.constructor.name);
     }
 
     private getTransition(): Transition | null {

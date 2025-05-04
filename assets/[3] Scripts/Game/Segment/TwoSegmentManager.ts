@@ -40,7 +40,7 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
 
     public override move() {
         let tweenToLeft = this.segments[0].getTweenTo(this.leftPoint);
-        let tweenToRandom = this.segments[1].rebuild().getTweenTo(this.randomPoint);
+        let tweenToRandom = this.segments[1].rebuild().getTweenTo(this.getRandomPoint(this.segments[1].width));
 
         tweenToLeft.call(() => tweenToRandom.call(() => {this.eventMoveEnded.Invoke()}).start()).start();
     }
@@ -56,7 +56,7 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
     public override swap(){
         let temp = this.segments[0];
 
-        this.segments[0].moveQuick(this.RightPoint);
+        this.segments[0].moveQuick(this.rightPoint);
 
         this.segments[0] = this.segments[1];
         this.segments[1] = temp;
@@ -70,7 +70,7 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
         this.eventMoveEnded.Unsubscribe(func);
     }
     
-    private get RightPoint(): cc.Vec3{
+    private get rightPoint(): cc.Vec3{
         let x = this.cameraBox.right;
 
         return new cc.Vec3(x, this.cameraBox.bot, 0);
@@ -82,10 +82,11 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
         return new cc.Vec3(x, this.cameraBox.bot, 0);
     }
 
-    private get randomPoint(): cc.Vec3{
-        let x = Math.randomInRange(
-            this.segments[0].getRightEnd().x + 0.1, 
-            this.cameraBox.right - this.segments[1].width);
+    private getRandomPoint(width: number): cc.Vec3{
+        var leftLimit = this.cameraBox.left + this.segments[0].width + 0.1;
+        var rightLimit = this.cameraBox.right - width;
+
+        let x = Math.randomInRange(leftLimit, rightLimit);
 
         return new cc.Vec3(x, this.cameraBox.bot, 0);
     }
