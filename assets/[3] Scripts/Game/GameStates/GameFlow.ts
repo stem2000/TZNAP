@@ -1,6 +1,5 @@
 import aBootableServiceComponent from "../../System/aBootableServiceComponent";
 import { StateMachine } from "../../System/StateMachine/StateMachine";
-import { GlobalEvent } from "../GlobalEvent";
 import GameReloadState from "./GameReloadState";
 import GameEndState from "./GameEndState";
 import GameStartState from "./GameStartState";
@@ -12,6 +11,8 @@ import GameInput from "../../System/GameInput";
 import UiManager from "../../System/UiManager";
 import Player from "../Player/Player";
 import SegmentManager from "../Segment/SegmentManager";
+import GameplayCoordinator from "../GameplayCoordinator";
+import Request from "../../System/Request";
 
 const {ccclass, property} = cc._decorator;
 
@@ -24,15 +25,13 @@ export default class GameFlow extends aBootableServiceComponent {
     isGameEnded: boolean;
     isGameReloaded: boolean;
 
-    inputHandler : GameInput;
-    segmentManager: SegmentManager;
     uiManager : UiManager
-    player: Player;
+    gameCoordinator: GameplayCoordinator;
 
     public override _init_(): void {
         let gameWaitState = new GameWaitState();
         let gameStartState = new GameStartState(this.uiManager);
-        let gamePlayState = new GamePlayState(this.uiManager, this.segmentManager, this.player);
+        let gamePlayState = new GamePlayState(this.uiManager, new Request<[], void>(this.gameCoordinator.startGameplay.bind(this.gameCoordinator)));
         let gameEndState = new GameEndState(this.uiManager);
         let gameReloadState = new GameReloadState();
         
@@ -43,10 +42,8 @@ export default class GameFlow extends aBootableServiceComponent {
     }
 
     public override _inject_(container: ServiceContainer): void {
-
+        this.gameCoordinator = container.get(GameplayCoordinator);
         this.uiManager = container.get(UiManager);
-        this.segmentManager = container.get(SegmentManager);
-        this.player = container.get(Player);
     }
 
     public confirmGameBoot(){

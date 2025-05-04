@@ -3,7 +3,6 @@ import aBootableService from "../System/aBootableService";
 import Player from "./Player/Player";
 import Segment from "./Segment/Segment";
 import SegmentManager from "./Segment/SegmentManager";
-import Request from "../System/Request";
 
 const {ccclass, property} = cc._decorator;
 
@@ -14,21 +13,34 @@ export default class GameplayCoordinator extends aBootableService{
 
     lasthit: number;
 
+    private boundHandleSegmentsStop: Function;
+
     public _inject_(container: ServiceContainer): void {
         this.segmentManager = container.get(SegmentManager);
         this.player = container.get(Player);
     }
 
-    public _init_(): void {}
+    public _init_(): void {
+        this.boundHandleSegmentsStop = this.handleSegmentsStop.bind(this);
 
-    public ValidateHit(hitlinePosition: cc.Vec2, hitlineLenght: number){
+        this.segmentManager.subscribeToMoveEndedEvent(this.boundHandleSegmentsStop);
+    }
+
+    public getProximateSegment(): Segment {
+        return this.segmentManager.getProximate();
+    }
+
+    public getLasthit(): number {
+        return this.lasthit;
+    }
+
+    public validateHit(hitlinePosition: cc.Vec2, hitlineLenght: number){
         let nextSegment = this.segmentManager.getNextSegment();
         let segmentMargins = nextSegment.getMarginsVec2();
         
         this.lasthit = hitlinePosition.x + hitlineLenght;
 
         if(this.lasthit >= segmentMargins.x && this.lasthit <= segmentMargins.y){
-            this.segmentManager.swap();
             this.player.run();
         }
         else{
@@ -36,11 +48,16 @@ export default class GameplayCoordinator extends aBootableService{
         }
     }
 
-    public GetProximateSegment(): Segment {
-        return this.segmentManager.getProximate();
+    public handleSegmentsStop(){
+        this.player.moveToEdge();
     }
 
-    public GetLasthit(): number {
-        return this.lasthit;
+    public startGameplay(){
+        this.player.stickToSegment();
+        this.segmentManager.move();
+    }
+
+    protected onDestroy(){
+        this.segmentManager.unsubscribeFromMoveEndedEvent(this.boundHandleSegmentsStop);
     }
 }

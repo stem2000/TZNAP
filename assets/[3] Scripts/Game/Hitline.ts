@@ -18,8 +18,8 @@ export default class Hitline extends cc.Component {
     @property(cc.Float)
     growSpeed: number = 10;
     
-    isGrowing: boolean = false;
 
+    isGrowing: boolean = false;
 
     public startGrowing(){
         this.isGrowing = true;
@@ -48,6 +48,7 @@ export default class Hitline extends cc.Component {
         if(this.isGrowing){
             this.lenght += this.growSpeed * dt;
             this.view.node.height = this.lenght;
+            cc.log("update" + this.isGrowing);
         }
     }
 }

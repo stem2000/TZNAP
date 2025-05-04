@@ -29,7 +29,9 @@ export default class Player extends aBootableServiceComponent{
     isEdgeTime: boolean = false;
     isBuildTime: boolean = false;
     isRunTime: boolean = false;
-    isRunToFallTime: boolean = false;
+    isDeathRunTime: boolean = false;
+    isFallTime: boolean = false;
+
 
     @property(Hitline)
     hitline: Hitline = null;
@@ -40,19 +42,20 @@ export default class Player extends aBootableServiceComponent{
 
     requestProximate: Request<[], Segment>;
     requestValidate: Request<[cc.Vec2, number], void>;
-    requestLashit: Request<[], number>;
+    requestLasthit: Request<[], number>;
     
     public override _inject_(container: ServiceContainer): void {
         this.input = container.get(GameInput);
 
         var gameCoordinator = container.get(GameplayCoordinator);
 
-        this.requestProximate = new Request<[], Segment>(gameCoordinator.GetProximateSegment.bind(gameCoordinator));
-        this.requestValidate = new Request<[cc.Vec2, number], void>(gameCoordinator.ValidateHit.bind(gameCoordinator));
-        this.requestLashit = new Request<[], number>(gameCoordinator.GetLasthit.bind(gameCoordinator));
+        this.requestProximate = new Request<[], Segment>(gameCoordinator.getProximateSegment.bind(gameCoordinator));
+        this.requestValidate = new Request<[cc.Vec2, number], void>(gameCoordinator.validateHit.bind(gameCoordinator));
+        this.requestLasthit = new Request<[], number>(gameCoordinator.getLasthit.bind(gameCoordinator));
     }
 
     public override _init_(): void {
+        this.initializeComponents();
         this.initializeEvents();
         this.initializeStates();
     }
@@ -78,7 +81,7 @@ export default class Player extends aBootableServiceComponent{
 
     public runToFall(){
         this.isBuildTime = false;
-        this.isRunToFallTime = true;
+        this.isDeathRunTime = true;
     }
 
     public stickToSegment(){
@@ -102,7 +105,7 @@ export default class Player extends aBootableServiceComponent{
     }
 
     private initializeComponents(){
-        this.mover = new PlayerMover(this);
+        this.mover = new PlayerMover(this.node);
     }
 
     private initializeEvents(){
@@ -112,10 +115,10 @@ export default class Player extends aBootableServiceComponent{
 
     private initializeStates(){
         const idle = new IdleState();
-        const run = new RunState();
+        const run = new RunState(this.mover);
         const plant = new PlantState(this.requestProximate, this);
         const build = new BuildState(this.hitline, this.requestValidate, this.input);
-        const stick = new StickState(new PlayerMover(this), this.eventOnSticked, this.requestProximate);
+        const stick = new StickState(this.mover, this.eventOnSticked, this.requestProximate);
         const edge = new EdgeState(new Request<[], void>(this.unlockBuilding.bind(this)), this.requestProximate, this.node);
 
         this.stateMachine.addTransition(plant, idle, new FuncPredicate(()=> true));

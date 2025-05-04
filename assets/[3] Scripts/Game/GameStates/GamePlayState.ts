@@ -1,26 +1,22 @@
 import { iState } from "../../System/StateMachine/iState";
 import UiManager from "../../System/UiManager";
-import Player from "../Player/Player";
-import SegmentManager from "../Segment/SegmentManager";
+import Request from "../../System/Request";
 
 export default class GamePlayState extends iState {
     uiManager: UiManager;
-    segmentManager: SegmentManager;
-    player: Player;
+    requestStartGame: Request<[], void>;
     
-    public constructor(uiManager : UiManager, segmentManager: SegmentManager, player: Player){
+    public constructor(uiManager : UiManager, requestStartGame: Request<[], void>){
         super();
 
         this.uiManager = uiManager;
-        this.segmentManager = segmentManager;
-        this.player = player;
+        this.requestStartGame = requestStartGame; 
     }
 
     public onEnter(): void {
         this.uiManager.OpenGameScreen();
         
-        this.player.stickToSegment();
-        this.segmentManager.move();
+        this.requestStartGame.Request();
     }
 
     public onExit(): void {

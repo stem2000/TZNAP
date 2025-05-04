@@ -1,11 +1,13 @@
 import { iState } from "../../../System/StateMachine/iState";
+import PlayerMover from "../PlayerMover";
 
 export default class Run extends iState {
-    
+    mover: PlayerMover;
 
-    public constructor(){
+    public constructor(mover: PlayerMover){
         super();
 
+        this.mover = mover;
     }
 
     public override onEnter(): void {

@@ -2,10 +2,10 @@ import { IBootable, IInjectable } from "../../Interfaces/Interfaces";
 import PrefabStorage from "../../System/PrefabStorage";
 import { Constructor, ServiceContainer } from "../../System/ServiceContainer";
 import CameraBox from "../CameraBox";
-import Player from "../Player/Player";
 import SegmentBuilder from "../SegmentBuilder";
 import Segment from "./Segment";
 import SegmentManager from "./SegmentManager";
+import Event from "../../System/Event";
 
 const {ccclass, property} = cc._decorator;
 
@@ -14,11 +14,12 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
     private segments: Segment[];
     private cameraBox: CameraBox;
     private segmentBuilder: SegmentBuilder;
-    private player: Player;
+
+    private eventMoveEnded: Event;
+
 
     public override _inject_(container: ServiceContainer): void {
         this.cameraBox = container.get(CameraBox);
-        this.player = container.get(Player);
         
         this.segmentBuilder = new SegmentBuilder(this.cameraBox, container.get(PrefabStorage));
     }
@@ -29,6 +30,7 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
 
     public override _init_(): void{
         this.segments = this.segmentBuilder.buildOneSegmentedLevel();
+        this.eventMoveEnded = new Event();
     }
 
 
@@ -40,9 +42,7 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
         let tweenToLeft = this.segments[0].getTweenTo(this.leftPoint);
         let tweenToRandom = this.segments[1].rebuild().getTweenTo(this.randomPoint);
 
-        tweenToLeft.call(()=>
-            tweenToRandom.call(() => {this.onMoveEnded()}).start()
-        ).start();
+        tweenToLeft.call(() => tweenToRandom.call(() => {this.eventMoveEnded.Invoke()}).start()).start();
     }
 
     public override getProximate(): Segment {
@@ -62,10 +62,13 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
         this.segments[1] = this.segments[0];
     }
 
-    private onMoveEnded(){
-        this.player.moveToEdge();
+    public override subscribeToMoveEndedEvent(func: Function){
+        this.eventMoveEnded.Subscribe(func);
     }
 
+    public override unsubscribeFromMoveEndedEvent(func: Function){
+        this.eventMoveEnded.Unsubscribe(func);
+    }
     
     private get RightPoint(): cc.Vec3{
         let x = this.cameraBox.right;

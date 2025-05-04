@@ -28,4 +28,7 @@ export default class SegmentManager extends aBootableServiceComponent{
 
     public swap(){};
 
+    public subscribeToMoveEndedEvent(func: Function){}
+
+    public unsubscribeFromMoveEndedEvent(func: Function){}
 }

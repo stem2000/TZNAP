@@ -19,6 +19,6 @@ export default class HitlineBuilding {
         let hitlineWorldPosition = this.hitline.node.convertToWorldSpaceAR(new cc.Vec2(0, 0));
 
         this.hitline.stopGrowing();
-        this.validator.ValidateHit(hitlineWorldPosition, this.hitline.lenght);
+        this.validator.validateHit(hitlineWorldPosition, this.hitline.lenght);
     }
 }

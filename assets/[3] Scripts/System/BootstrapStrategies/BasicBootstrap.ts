@@ -45,20 +45,19 @@ export default class BasicBootstrap extends BootstrapStrategy {
         this.injectInBootableServiceComponents(bootableServiceComponents);
         this.injectInBootableComponents(bootableComponents);
         
-        this.initializeBootableServices(bootableServices);
-        this.initializeBootableServiceComponents(bootableServiceComponents);
+        this.initializeBootableServicesOfAnyType(bootableServices, bootableServiceComponents);
     }
 
     private registerBootableServices(): aBootableService[]{
-        let bootables = [
+        let bootableServices = [
             new GameplayCoordinator()
         ];
 
-        bootables.forEach(bootable =>{
-            this.serviceContainer.register(bootable.constructor as Constructor, bootable);
+        bootableServices.forEach(bootableService =>{
+            this.serviceContainer.register(bootableService.constructor as Constructor, bootableService);
         })
 
-        return bootables;
+        return bootableServices;
     }
 
     private registerBootableServiceComponents(bootables : aBootableServiceComponent[]): aBootableServiceComponent[]{
@@ -125,24 +124,15 @@ export default class BasicBootstrap extends BootstrapStrategy {
         return bootables;
     }
 
-    private initializeBootableServices(bootables : aBootableService[]): aBootableService[] {
-        bootables.forEach(bootable => {
-            bootable._init_();
-        });
-
-        return bootables;
-    }
-
-    private initializeBootableServiceComponents(bootableComponents : aBootableServiceComponent[]): aBootableServiceComponent[]{
+    private initializeBootableServicesOfAnyType(bootablesServices : aBootableService[], bootableServiceComponents: aBootableServiceComponent[]) {
+        var services = bootablesServices.concat(bootableServiceComponents);
 
         this.initSequence.forEach((ComponentType) => {
-            const bootable = bootableComponents.find(c => c instanceof ComponentType);
+            const bootable = services.find(c => c instanceof ComponentType);
             if (bootable) {
                 bootable._init_();
             }
         });
-
-        return bootableComponents;
     }
 
     private configureCC(){       

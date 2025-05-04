@@ -26,18 +26,16 @@ export default class BuildState extends iState {
 
     public override onEnter(): void {
         this.input.subcribeToOnTouchStart(this.boundStartBuilding);
-        this.input.subcribeToOnTouchEnd(this.boundStopBuilding);
     }
 
-    public override onExit(): void {
-        this.input.unsubcribeFromOnTouchStart(this.boundStartBuilding);
-        this.input.unsubscribeFromOnTouchEnd(this.boundStopBuilding);
-    }
+    public override onExit(): void {}
 
     public override update(): void {}
 
     private startBuilding(){
         this.hitline.startGrowing();
+
+        this.input.subcribeToOnTouchEnd(this.boundStopBuilding);
     }
 
     private stopBuilding(){
@@ -45,7 +43,10 @@ export default class BuildState extends iState {
 
         this.hitline.stopGrowing();
         this.hitline.fall(()=>{
-            this.requestValidate.Request(hitlineWorldPosition, this.hitline.lenght);})
+            this.requestValidate.Request(hitlineWorldPosition, this.hitline.lenght);
+        })
         
+        this.input.unsubcribeFromOnTouchStart(this.boundStartBuilding);
+        this.input.unsubscribeFromOnTouchEnd(this.boundStopBuilding);
     }
 }
