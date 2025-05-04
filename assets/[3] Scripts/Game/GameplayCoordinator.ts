@@ -8,56 +8,69 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class GameplayCoordinator extends aBootableService{
-    player: Player;
-    segmentManager: SegmentManager;
+    _player: Player;
+    _segmentManager: SegmentManager;
 
-    lasthit: number;
+    _lasthit: number;
 
-    private boundHandleSegmentsStop: Function;
+    private _boundHandleSegmentsStop: Function;
+    private _boundHandlePlayerStop: Function;
 
     public _inject_(container: ServiceContainer): void {
-        this.segmentManager = container.get(SegmentManager);
-        this.player = container.get(Player);
+        this._segmentManager = container.get(SegmentManager);
+        this._player = container.get(Player);
     }
 
     public _init_(): void {
-        this.boundHandleSegmentsStop = this.handleSegmentsStop.bind(this);
+        this._boundHandleSegmentsStop = this.handleSegmentsStop.bind(this);
+        this._boundHandlePlayerStop = this.handlePlayerStop.bind(this);
 
-        this.segmentManager.subscribeToMoveEndedEvent(this.boundHandleSegmentsStop);
+        this._segmentManager.subscribeToMoveEndedEvent(this._boundHandleSegmentsStop);
+        this._player.subscribeToOnPlayerStop(this._boundHandlePlayerStop);
     }
 
     public getProximateSegment(): Segment {
-        return this.segmentManager.getProximate();
+        return this._segmentManager.getProximate();
+    }
+
+    public getNextSegment(): Segment{
+        return this._segmentManager.getNext();
     }
 
     public getLasthit(): number {
-        return this.lasthit;
+        return this._lasthit;
     }
 
     public validateHit(hitlinePosition: cc.Vec2, hitlineLenght: number){
-        let nextSegment = this.segmentManager.getNextSegment();
+        let nextSegment = this._segmentManager.getNext();
         let segmentMargins = nextSegment.getMarginsVec2();
         
-        this.lasthit = hitlinePosition.x + hitlineLenght;
+        this._lasthit = this._player.node.position.x + hitlineLenght;
 
-        if(this.lasthit >= segmentMargins.x && this.lasthit <= segmentMargins.y){
-            this.player.run();
+        if(this._lasthit >= segmentMargins.x && this._lasthit <= segmentMargins.y){
+            this._player.run();
         }
         else{
-            this.player.run();
+            this._player.run();
         }
     }
 
     public handleSegmentsStop(){
-        this.player.moveToEdge();
+        this._player.moveToEdge();
+    }
+
+    public handlePlayerStop(){
+        this._segmentManager.swap();
+        this._player.stickToSegment();
+        this._segmentManager.move();
     }
 
     public startGameplay(){
-        this.player.stickToSegment();
-        this.segmentManager.move();
+        this._player.stickToSegment();
+        this._segmentManager.move();
     }
 
     protected onDestroy(){
-        this.segmentManager.unsubscribeFromMoveEndedEvent(this.boundHandleSegmentsStop);
+        this._segmentManager.unsubscribeFromMoveEndedEvent(this._boundHandleSegmentsStop);
     }
 }

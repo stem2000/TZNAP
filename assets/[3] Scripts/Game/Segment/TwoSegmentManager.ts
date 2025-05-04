@@ -49,7 +49,7 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
         return this.segments[0];
     }
 
-    public override getNextSegment(): Segment {
+    public override getNext(): Segment {
         return this.segments[1];
     }
 
@@ -59,7 +59,7 @@ export default class TwoSegmentsManager extends SegmentManager implements IInjec
         this.segments[0].moveQuick(this.RightPoint);
 
         this.segments[0] = this.segments[1];
-        this.segments[1] = this.segments[0];
+        this.segments[1] = temp;
     }
 
     public override subscribeToMoveEndedEvent(func: Function){

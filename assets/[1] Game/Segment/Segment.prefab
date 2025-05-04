@@ -322,20 +322,20 @@
       "__id__": 1
     },
     "_enabled": true,
-    "widthLimits": {
+    "widthLimits_": {
       "__id__": 10
     },
-    "view": {
+    "view_": {
       "__id__": 7
     },
     "height_": 6,
-    "width_": 2,
+    "width_": 4,
     "_id": ""
   },
   {
     "__type__": "Limits",
-    "min": 0.5,
-    "max": 2
+    "min": 2,
+    "max": 6
   },
   {
     "__type__": "cc.PrefabInfo",

@@ -10,32 +10,32 @@ const {ccclass, property} = cc._decorator;
 export default class Hitline extends cc.Component {
 
     @property(cc.Sprite)
-    view : cc.Sprite = null;
+    private view_ : cc.Sprite = null;
 
     @property(cc.Float)
-    lenght: number = 1;
+    private lenght_: number = 1;
     
     @property(cc.Float)
-    growSpeed: number = 10;
+    private growSpeed_: number = 10;
     
 
-    isGrowing: boolean = false;
+    _isGrowing: boolean = false;
 
     public startGrowing(){
-        this.isGrowing = true;
+        this._isGrowing = true;
     }
 
     public stopGrowing(){
-        this.isGrowing = false;
+        this._isGrowing = false;
     }
 
     public getSize(): number{
-        return this.lenght;
+        return this.lenght_;
     }
 
     public reset(){
-        this.view.node.rotation = 0;
-        this.view.node.height = this.lenght = 1;
+        this.view_.node.rotation = 0;
+        this.view_.node.height = this.lenght_ = 1;
     }
 
     public fall(callback: Function){
@@ -45,10 +45,9 @@ export default class Hitline extends cc.Component {
     }    
 
     protected update(dt: number): void {
-        if(this.isGrowing){
-            this.lenght += this.growSpeed * dt;
-            this.view.node.height = this.lenght;
-            cc.log("update" + this.isGrowing);
+        if(this._isGrowing){
+            this.lenght_ += this.growSpeed_ * dt;
+            this.view_.node.height = this.lenght_;
         }
     }
 }

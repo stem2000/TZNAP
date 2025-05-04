@@ -1,37 +1,35 @@
 import { iState } from "../../../System/StateMachine/iState";
-import GameplayCoordinator from "../../GameplayCoordinator";
 import Segment from "../../Segment/Segment";8
 import PlayerMover from "../PlayerMover";
-import Event from "../../../System/Event";
 import Request from "../../../System/Request";
 
 export default class StickState extends iState {
-    mover: PlayerMover;
-    stickedSegment: Segment;
+    _mover: PlayerMover;
+    _relatedDistanceToSegment: number;
+    _stickedSegment: Segment;
 
-    eventOnSticked: Event;
+    _requestProximate: Request<[], Segment>;
 
-    requestProximate: Request<[], Segment>;
-
-    public constructor(mover: PlayerMover, onStickedEvent: Event, requestProximate: Request<[], Segment>){
+    public constructor(mover: PlayerMover, requestProximate: Request<[], Segment>){
         super();
 
-        this.mover = mover;
+        this._mover = mover;
 
-        this.eventOnSticked = onStickedEvent;
-
-        this.requestProximate = requestProximate;
+        this._requestProximate = requestProximate;
     }
 
     public override onEnter(): void {
-        this.stickedSegment = this.requestProximate.Request();
+        this._stickedSegment = this._requestProximate.Request();
+
+        this._relatedDistanceToSegment = this._stickedSegment.getRightEnd().x - this._mover.getCurrentPosition().x;
     };
 
     public override onExit(): void {};
 
     public override update(): void {
-        let target = this.stickedSegment.getRightEnd();
+        let target = this._stickedSegment.getRightEnd();
 
-        this.mover.stickTo(new cc.Vec3(target.x, target.y, 0));
+        target.x -= this._relatedDistanceToSegment;
+        this._mover.stickTo(new cc.Vec3(target.x, target.y, 0));
     }
 }

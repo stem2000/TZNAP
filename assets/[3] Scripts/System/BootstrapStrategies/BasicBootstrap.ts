@@ -22,8 +22,8 @@ export default class BasicBootstrap extends BootstrapStrategy {
         SegmentManager,
         PrefabStorage,
         GameInput,
+        Player,
         GameplayCoordinator,
-        Player, 
         GameFlow
     ]
 

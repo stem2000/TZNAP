@@ -14,7 +14,7 @@ export default class SegmentManager extends aBootableServiceComponent{
 
     protected addSegments(segments: Segment[]){}
 
-    public getNextSegment(): Segment {
+    public getNext(): Segment {
         cc.log("Should override super.getNext() on " + this);    
         return undefined;
     };

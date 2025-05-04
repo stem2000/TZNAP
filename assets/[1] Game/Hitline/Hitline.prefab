@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Bridge",
+    "_name": "Hitline",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -74,13 +74,16 @@
     "_id": ""
   },
   {
-    "__type__": "2cfbcX2qI1PHoQ9T+EqHLKu",
+    "__type__": "a37dbfmWtlO3KKED2GL6TBR",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
+    "view_": null,
+    "lenght_": 1,
+    "growSpeed_": 10,
     "_id": ""
   },
   {

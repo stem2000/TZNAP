@@ -9,10 +9,10 @@ const {ccclass, property} = cc._decorator;
 export default class Segment extends cc.Component {
 
     @property(Limits)
-    private widthLimits: Limits = null;
+    private widthLimits_: Limits = null;
 
     @property(SegmentView)
-    private view: SegmentView = null;
+    private view_: SegmentView = null;
 
     @property(cc.Float)
     private height_: number = 6;
@@ -37,15 +37,15 @@ export default class Segment extends cc.Component {
 
 
     public build(): Segment{
-        this.view.rebuild(this.width_, this.height_, this.center);
+        this.view_.rebuild(this.width_, this.height_, this.center);
 
         return this;
     }
 
     public rebuild():Segment {
-        this.width_ = this.widthLimits.getValueInLimits();
+        this.width_ = this.widthLimits_.getValueInLimits();
 
-        this.view.rebuild(this.width_, this.height_, this.center);
+        this.view_.rebuild(this.width_, this.height_, this.center);
         return this;
     }
 
@@ -62,7 +62,7 @@ export default class Segment extends cc.Component {
         let leftEnd = new cc.Vec2();
         let worldPosition = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
 
-        leftEnd.x = worldPosition.x - this.width_;
+        leftEnd.x = worldPosition.x;
         leftEnd.y = worldPosition.y + this.height_;
 
         return leftEnd;

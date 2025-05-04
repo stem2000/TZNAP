@@ -21,37 +21,37 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Player extends aBootableServiceComponent{
-    input: GameInput;
+    _input: GameInput;
 
-    stateMachine : StateMachine = new StateMachine();
+    _stateMachine : StateMachine = new StateMachine();
 
-    isStickTime: boolean = false;
-    isEdgeTime: boolean = false;
-    isBuildTime: boolean = false;
-    isRunTime: boolean = false;
-    isDeathRunTime: boolean = false;
-    isFallTime: boolean = false;
+    _isStickTime: boolean = false;
+    _isEdgeTime: boolean = false;
+    _isBuildTime: boolean = false;
+    _isRunTime: boolean = false;
+    _isDeathRunTime: boolean = false;
+    _isFallTime: boolean = false;
 
 
     @property(Hitline)
-    hitline: Hitline = null;
-    mover: PlayerMover = null;
+    hitline_: Hitline = null;
+    _mover: PlayerMover = null;
 
-    eventOnSticked: Event;
-    eventOnEdged: Event;
+    _eventOnStop: Event;
+    _eventOnEdged: Event;
 
-    requestProximate: Request<[], Segment>;
-    requestValidate: Request<[cc.Vec2, number], void>;
-    requestLasthit: Request<[], number>;
+    _requestProximate: Request<[], Segment>;
+    _requestValidate: Request<[cc.Vec2, number], void>;
+    _requestLasthit: Request<[], number>;
     
     public override _inject_(container: ServiceContainer): void {
-        this.input = container.get(GameInput);
+        this._input = container.get(GameInput);
 
         var gameCoordinator = container.get(GameplayCoordinator);
 
-        this.requestProximate = new Request<[], Segment>(gameCoordinator.getProximateSegment.bind(gameCoordinator));
-        this.requestValidate = new Request<[cc.Vec2, number], void>(gameCoordinator.validateHit.bind(gameCoordinator));
-        this.requestLasthit = new Request<[], number>(gameCoordinator.getLasthit.bind(gameCoordinator));
+        this._requestProximate = new Request<[], Segment>(gameCoordinator.getProximateSegment.bind(gameCoordinator));
+        this._requestValidate = new Request<[cc.Vec2, number], void>(gameCoordinator.validateHit.bind(gameCoordinator));
+        this._requestLasthit = new Request<[], number>(gameCoordinator.getLasthit.bind(gameCoordinator));
     }
 
     public override _init_(): void {
@@ -61,73 +61,75 @@ export default class Player extends aBootableServiceComponent{
     }
 
     protected update(dt: number): void {
-        this.stateMachine.update();
+        this._stateMachine.update();
     }
 
     public moveToEdge(){
-        this.isStickTime = false;
-        this.isEdgeTime = true;
+        this._isStickTime = false;
+        this._isEdgeTime = true;
     }
 
     public unlockBuilding(){
-        this.isEdgeTime = false;
-        this.isBuildTime = true;
+        this._isEdgeTime = false;
+        this._isBuildTime = true;
     }
 
     public run(){
-        this.isBuildTime = false;
-        this.isRunTime = true;
+        this._isBuildTime = false;
+        this._isRunTime = true;
     }
 
     public runToFall(){
-        this.isBuildTime = false;
-        this.isDeathRunTime = true;
+        this._isBuildTime = false;
+        this._isDeathRunTime = true;
     }
 
     public stickToSegment(){
-        this.isStickTime = true;
+        this._isRunTime = false;
+        this._isStickTime = true;
     }
 
-    public subscribeToOnStickedEvent(subsriber: Function){
-        this.eventOnSticked.Subscribe(subsriber);
+    public subscribeToOnPlayerStop(subsriber: Function){
+        this._eventOnStop.Subscribe(subsriber);
     }
 
-    public unsubscribeFromOnStickedEvent(subsriber: Function){
-        this.eventOnSticked.Unsubscribe(subsriber);
+    public unsubscribeFromOnPlayerStopEvent(subsriber: Function){
+        this._eventOnStop.Unsubscribe(subsriber);
     }
 
     public subscribeToOnEdgedEvent(subsriber: Function){
-        this.eventOnSticked.Subscribe(subsriber);
+        this._eventOnStop.Subscribe(subsriber);
     }
 
     public unsubscribeFromOnEdgedEvent(subsriber: Function){
-        this.eventOnSticked.Unsubscribe(subsriber);
+        this._eventOnStop.Unsubscribe(subsriber);
     }
 
     private initializeComponents(){
-        this.mover = new PlayerMover(this.node);
+        this._mover = new PlayerMover(this.node);
     }
 
     private initializeEvents(){
-        this.eventOnSticked = new Event();
-        this.eventOnEdged = new Event();
+        this._eventOnStop = new Event();
+        this._eventOnEdged = new Event();
     }
 
     private initializeStates(){
         const idle = new IdleState();
-        const run = new RunState(this.mover);
-        const plant = new PlantState(this.requestProximate, this);
-        const build = new BuildState(this.hitline, this.requestValidate, this.input);
-        const stick = new StickState(this.mover, this.eventOnSticked, this.requestProximate);
-        const edge = new EdgeState(new Request<[], void>(this.unlockBuilding.bind(this)), this.requestProximate, this.node);
+        const run = new RunState(this._mover, this._requestLasthit, this._eventOnStop);
+        const plant = new PlantState(this._requestProximate, this);
+        const build = new BuildState(this.hitline_, this._requestValidate, this._input);
+        const stick = new StickState(this._mover, this._requestProximate);
+        const edge = new EdgeState(new Request<[], void>(this.unlockBuilding.bind(this)), this._requestProximate, this.node);
 
-        this.stateMachine.addTransition(plant, idle, new FuncPredicate(()=> true));
-        this.stateMachine.addTransition(idle, stick, new FuncPredicate(()=> this.isStickTime));
-        this.stateMachine.addTransition(stick, edge, new FuncPredicate(()=> this.isEdgeTime));
-        this.stateMachine.addTransition(edge, build, new FuncPredicate(()=> this.isBuildTime));
-        this.stateMachine.addTransition(build, run, new FuncPredicate(()=> this.isRunTime));
+        this._stateMachine.addTransition(plant, idle, new FuncPredicate(()=> true));
+        this._stateMachine.addTransition(idle, stick, new FuncPredicate(()=> this._isStickTime));
+        this._stateMachine.addTransition(stick, edge, new FuncPredicate(()=> this._isEdgeTime));
+        this._stateMachine.addTransition(edge, build, new FuncPredicate(()=> this._isBuildTime));
+        this._stateMachine.addTransition(build, run, new FuncPredicate(()=> this._isRunTime));
+        this._stateMachine.addTransition(run, stick, new FuncPredicate(()=> this._isStickTime));
 
-        this.stateMachine.setState(plant);
+        this._stateMachine.setState(plant);
     }
 }
 
